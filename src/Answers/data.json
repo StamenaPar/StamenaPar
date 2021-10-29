@@ -1,0 +1,45 @@
+[
+	{
+		"answerId": 111,
+		"text": "You should do the following",
+		"words": [],
+		"options" : [],
+		"createdBy": 101,
+		"created": "2021-10-05T14:48:00.000Z"
+	}, {
+		"answerId": 112,
+		"text": "Also do the rest of important",
+		"words": [],
+		"options" : [],
+		"createdBy": 101,
+		"created": "2021-10-05T14:48:00.000Z"
+	},	{
+		"answerId": 113,
+		"text": "Try something else",
+		"words": [],
+		"options" : [],
+		"createdBy": 101,
+		"created": "2021-10-05T14:48:00.000Z"
+	}, {
+		"answerId": 114,
+		"text": "Contact our support",
+		"words": [],
+		"options" : [],
+		"createdBy": 101,
+		"created": "2021-10-05T14:48:00.000Z"
+	},	{
+		"answerId": 115,
+		"text": "Do whatever you want!",
+		"words": [],
+		"options" : [],
+		"createdBy": 101,
+		"created": "2021-10-05T14:48:00.000Z"
+	},	{
+		"answerId": 116,
+		"text": "Jump through the window.",
+		"words": [],
+		"options" : [],
+		"createdBy": 101,
+		"created": "2021-10-05T14:48:00.000Z"
+	}
+]

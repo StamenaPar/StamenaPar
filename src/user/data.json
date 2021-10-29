@@ -1,0 +1,38 @@
+[
+	{
+		"roleId": 11,
+		"title": "Owner",
+		"color": "orange",
+		"users": [],
+		"isExpanded": false,
+		"createdBy": 101,
+		"created": "2021-10-05T14:48:00.000Z"
+	},
+	{
+		"roleId": 22,
+		"title": "Admins",
+		"color": "brown",
+		"users": [],
+		"isExpanded": false,
+		"createdBy": 101,
+		"created": "2021-10-05T14:48:00.000Z"
+	},
+	{
+		"roleId": 33,
+		"title": "Editors",
+		"color": "blue",
+		"users": [],
+		"isExpanded": false,
+		"createdBy": 101,
+		"created": "2021-10-05T14:48:00.000Z"
+	},
+	{
+		"roleId": 44,
+		"title": "Viewers",
+		"color": "green",
+		"users": [],
+		"isExpanded": false,
+		"createdBy": 101,
+		"created": "2021-10-05T14:48:00.000Z"
+	}
+]

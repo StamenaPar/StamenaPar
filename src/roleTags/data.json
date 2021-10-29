@@ -1,0 +1,8 @@
+[
+	{ "tagId": 1,	"name": "iOS", "color": "orange" },
+	{ "tagId": 2,	"name": "Android", "color": "yellow" },
+	{ "tagId": 3,	"name": "Windows", "color": "navy" },
+	{ "tagId": 4,	"name": "Battery", "color": "lighblue" },
+	{ "tagId": 5,	"name": "Bug", "color": "red" },
+	{ "tagId": 6,	"name": "Feature", "color": "blue" }
+]

@@ -1,0 +1,150 @@
+[
+	{
+		"categoryId": 11,
+		"title": "General settings",
+		"questions": [
+			{
+				"questionId": 1001,
+				"text": "Why promocode hasn't been applied?",
+				"words": [],
+				"answers": [
+					{
+						"answerId": 111,
+						"assignedBy": 1,
+						"assigned": "2021-10-05T14:48:00.000Z"
+					},
+					{
+						"answerId": 112,
+						"assignedBy": 1,
+						"assigned": "2021-10-05T14:48:00.000Z"
+					},
+					{
+						"answerId": 114,
+						"assignedBy": 1,
+						"assigned": "2021-10-05T14:48:00.000Z"
+					}
+				],
+				"source": 1,
+				"status": 2,
+				"createdBy": 101,
+				"created": "2021-10-05T14:48:00.000Z"
+			}
+		],
+		"isExpanded": false,
+		"createdBy": 101,
+		"created": "2021-10-05T14:48:00.000Z"
+	},
+	{
+		"categoryId": 22,
+		"title": "Taxes",
+		"questions": [
+			{
+				"questionId": 1002,
+				"text": "Which promocode do we apply?",
+				"words": [],
+				"answers": [],
+				"source": 1,
+				"status": 2,
+				"createdBy": 101,
+				"created": "2021-10-05T14:48:00.000Z"
+			},
+			{
+				"questionId": 1003,
+				"text": "Which promocode for client do we apply?",
+				"words": [],
+				"answers": [
+					{
+						"answerId": 111,
+						"assignedBy": 1,
+						"assigned": "2021-10-05T14:48:00.000Z"
+					}
+				],
+				"source": 1,
+				"status": 2,
+				"createdBy": 101,
+				"created": "2021-10-05T14:48:00.000Z"
+			}
+		],
+		"isExpanded": false,
+		"createdBy": 101,
+		"created": "2021-10-05T14:48:00.000Z"
+	},
+	{
+		"categoryId": 33,
+		"title": "Client settings",
+		"questions": [
+			{
+				"questionId": 1004,
+				"text": "Does client has promocode?",
+				"words": [],
+				"answers": [
+					{
+						"answerId": 116,
+						"assignedBy": 1,
+						"assigned": "2021-10-05T14:48:00.000Z"
+					}
+				],
+				"source": 1,
+				"status": 2,
+				"createdBy": 101,
+				"created": "2021-10-05T14:48:00.000Z"
+			},
+			{
+				"questionId": 1005,
+				"text": "What promocode do we use?",
+				"words": [],
+				"answers": [
+					{
+						"answerId": 114,
+						"assignedBy": 1,
+						"assigned": "2021-10-05T14:48:00.000Z"
+					}
+				],
+				"source": 1,
+				"status": 2,
+				"createdBy": 101,
+				"created": "2021-10-05T14:48:00.000Z"
+			},
+			{
+				"questionId": 1006,
+				"text": "Why taxes are less than 5%?",
+				"words": [],
+				"answers": [
+					{
+						"answerId": 111,
+						"assignedBy": 1,
+						"assigned": "2021-10-05T14:48:00.000Z"
+					},
+					{
+						"answerId": 114,
+						"assignedBy": 1,
+						"assigned": "2021-10-05T14:48:00.000Z"
+					}
+				],
+				"source": 1,
+				"status": 2,
+				"createdBy": 101,
+				"created": "2021-10-05T14:48:00.000Z"
+			},
+			{
+				"questionId": 1007,
+				"text": "When do we do something?",
+				"words": [],
+				"answers": [
+					{
+						"answerId": 113,
+						"assignedBy": 1,
+						"assigned": "2021-10-05T14:48:00.000Z"
+					}
+				],
+				"source": 1,
+				"status": 2,
+				"createdBy": 101,
+				"created": "2021-10-05T14:48:00.000Z"
+			}
+		],
+		"isExpanded": false,
+		"createdBy": 101,
+		"created": "2021-10-05T14:48:00.000Z"
+	}
+]
