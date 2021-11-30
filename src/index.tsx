@@ -1,7 +1,7 @@
 import React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { HashRouter as Router, Route, Switch, Link } from 'react-router-dom' // useRouteMatch
+import { HashRouter as Router, Route, Switch, Link, Redirect } from 'react-router-dom' // useRouteMatch
 
 import { Provider } from 'react-redux';
 
@@ -25,6 +25,7 @@ import { getAllTags } from './roleTags/actions';
 import UsersPage from './user/containers/UsersPage';
 import { authenticate, loadTop } from './Top/actions';
 import { IUser } from './user/types';
+import LoginForm from './Top/containers/LoginFrom';
 
 interface IProps {
 	store: Store<IAppState>;
@@ -32,6 +33,8 @@ interface IProps {
 
 // <Router basename={'/'}>
 const Root: React.SFC<IProps> = props => {
+	const { top } = props.store.getState().topState;
+	const { isAuthenticated } = top;
 	return (
 		<Provider store={props.store} >
 			<Router basename={'/'}>
@@ -49,13 +52,16 @@ const Root: React.SFC<IProps> = props => {
 						<li>
 							<Link to="/users/2">Users</Link>
 						</li>
-						<li  className="push-right">
-							<Link to="/answers/sima">Sign In</Link>
+						<li className="push-right">
+							<Link to="/authenticate">Sign In</Link>
 						</li>
-					</ul>					
+					</ul>
 				</nav>
 				<div>
 					<Switch>
+						<Route exact path="/authenticate">
+							<LoginForm canEdit={true} />
+						</Route>
 						{/* exact */}
 						<Route exact path="/supporter/:tekst?">
 							{<App />}
@@ -68,16 +74,16 @@ const Root: React.SFC<IProps> = props => {
 						</Route>
 						<Route path="/users/:slug">
 							<UsersPage canEdit={true} />
-						</Route>
+						</Route>				
 						{/* <Route
-							path="/blog2/:slug"
-							render={({ match }) => {
-								// Do whatever you want with the match...
-								return <div>{match}</div>;
-							}}
-						/> */}
+									path="/blog2/:slug"
+									render={({ match }) => {
+										// Do whatever you want with the match...
+										return <div>{match}</div>;
+									}}>
+								</Route> */}
 					</Switch>
-				</div>	
+				</div>
 			</Router>
 		</Provider>
 	);
@@ -86,7 +92,7 @@ const Root: React.SFC<IProps> = props => {
 coolColors();
 
 // Generate the store
-//localStorage.clear(); // !!!!!!!!!!!!
+localStorage.clear(); // !!!!!!!!!!!!
 
 const store = configureStore();
 store.dispatch(loadCategories());
@@ -98,16 +104,17 @@ store.dispatch(getAllTags())
 const userIdOwner = 101;
 const state = store.getState();
 if (state.usersState.allUsers.length === 0) {
-	const user = { 	
+	const user = {
 		roleId: 11,
 		userId: userIdOwner,
 		name: "Jack",
+		pwd: "Daniels",
 		department: "dept1",
 		createdBy: userIdOwner,
 		created: new Date()
 	}
 	store.dispatch(storeUser(user, 'add'))
-	store.dispatch(authenticate(user))
+	// store.dispatch(authenticate(user))
 }
 else {
 	console.log('state.topState', state.topState)
@@ -121,7 +128,7 @@ else {
 // React.StrictMode
 ReactDOM.render(
 	<React.StrictMode>
-	  <Root store={store} />
+		<Root store={store} />
 	</React.StrictMode>,
-	document.getElementById('root') 
-  );
+	document.getElementById('root')
+);

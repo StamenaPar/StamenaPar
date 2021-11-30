@@ -108,8 +108,8 @@ const myReducer: Reducer<IUsersState, UserActions> = (
 
 		case UserActionTypes.GET_USER: {
 			let user = undefined;
-			for (let section of state.roles) {
-				user = section.users
+			for (let role of state.roles) {
+				user = role.users
 					.find(user => user.userId === action.userId);
 				if (user)
 					break;
@@ -122,8 +122,8 @@ const myReducer: Reducer<IUsersState, UserActions> = (
 
 		case UserActionTypes.ADD_USER: {
 			let userIdMax = 0;
-			for (let section of state.roles) {
-				for (let user of section.users) 
+			for (let role of state.roles) {
+				for (let user of role.users) 
 					if (user.userId > userIdMax)
 						userIdMax = user.userId
 			}

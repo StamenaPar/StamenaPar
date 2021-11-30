@@ -50,6 +50,27 @@ const myReducer: Reducer<ITopState, TopActions> = (
 			};
 		}
 
+		case TopActionTypes.AUTHENTICATE_WRONG_USERNAME: {
+			return {
+				...state,
+				top : { 
+					... state.top,
+					authError: "User doesn't exist!"
+				}
+			};
+		}		
+
+		case TopActionTypes.AUTHENTICATE_WRONG_PWD: {
+			return {
+				...state,
+				top : {
+					... state.top,
+					authError: "Password doesn't match!"
+				}
+			};
+		}		
+
+
 		default:
 			return state;
 	}

@@ -57,7 +57,7 @@ export const DetailView: React.FC<IProps> = (props: IProps) => {
 						created: new Date()
 					}}
 					formMode='add'
-					cancel={()  => {}}
+					cancel={() => {}}
 					saveForm={(answer: IAnswer) => { 
 						addAndAssignNewAnswer(categoryId, questionId, answer, 'add');
 						close();

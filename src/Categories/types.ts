@@ -64,6 +64,7 @@ export const initialQuestion: IQuestion = {
 
  export interface IComponentProps {
 	categories: ICategory[];
+	categoryQuestions: Map<number, ICategoryState>,
 	categoryOptions: IOption<number>[],
 	question?: IQuestion;
 	lastAnswer?: IAnswer;
@@ -71,7 +72,7 @@ export const initialQuestion: IQuestion = {
 	categoryIdEditing: number,
 	canEdit: boolean,
 	who: IUser,
-	onSelectQuestion: (questionId: number) => IQuestion;
+	onSelectQuestion: (categoryId: number, questionId: number) => IQuestion;
 	add: (categoryId: number, text: string, canEdit?: boolean) => void;
 	edit: (categoryId: number, questionId: number) => void;
 	remove: (categoryId: number, questionId: number) => void;
@@ -81,14 +82,22 @@ export const initialQuestion: IQuestion = {
 	editCategory: (categoryId: number) => void;
 	removeCategory: (categoryId: number) => void;
 	storeCategory: (group: ICategory) => void;
+	updateCategory: (group: ICategory) => void;
 	// question answer
 	addAndAssignNewAnswer: (categoryId: number, questionId: number, answer: IAnswer, formMode: string) => void
 }
 
+export interface ICategoryState {
+	questions: IQuestion[];
+}
+
+
 // Define the Question State
 export interface ICategoriesState {
 	readonly categories: ICategory[];
+	categoryQuestions: Map<number, ICategoryState>,
 	readonly question: IQuestion | undefined;
+	questionCopy?: IQuestion;
 	categoryOptions: IOption<number>[];
 	loading: boolean,
 	formMode: string;
@@ -96,9 +105,6 @@ export interface ICategoriesState {
 	isDetail: boolean
 }
 
-export interface ICategoryState {
-	questions: IQuestion[];
-}
 
 export interface IFormProps {
 	question: IQuestion;

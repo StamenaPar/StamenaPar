@@ -194,6 +194,26 @@ export const getUser: ActionCreator<
 	};
 };
 
+export const findUser: ActionCreator<
+	ThunkAction<Promise<any>, IAppState, string, IGet>
+> = (name: string) => {
+	return async (dispatch: Dispatch, getState: () => IAppState) => {
+		try {
+			const {usersState} = getState();
+			let user;
+			for (let role of usersState.roles) {
+				user = role.users.find(user => user.name === name);
+				if (user)
+					break;
+			}
+			return user;
+		}
+		catch (err) {
+			console.error(err);
+		}
+	};
+};
+
 
 
 export const addUser: ActionCreator<

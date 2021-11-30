@@ -25,7 +25,7 @@ const mapStateToProps = (store: IAppState) => {
 	answer: store.answerState.answer!,
 	formMode: store.answerState.formMode,
 	usedAnswers: getUsedAnswers(store.categoriesState.categories),
-	who: store.topState.top?.auth?.who
+	who: store.topState.top.auth!.who
   };
 };
 

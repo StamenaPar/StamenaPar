@@ -21,7 +21,10 @@ let inputAutosuggest = createRef<HTMLInputElement>();
 
 const QuestionAutosuggestMulti = Autosuggest as { new(): Autosuggest<IQuestion, ICategory> };
 
-export class AutoSuggest extends React.Component<{ categories: ICategory[], tekst: string, onSelectQuestion: (questionId: number) => void }, any> {
+export class AutoSuggest extends React.Component<{ 
+	categories: ICategory[], 
+	tekst: string, 
+	onSelectQuestion: (categoryId: number, questionId: number) => void }, any> {
 	// region Fields
 
 	state: any;
@@ -91,7 +94,7 @@ export class AutoSuggest extends React.Component<{ categories: ICategory[], teks
 	protected onSuggestionSelected(event: React.FormEvent<any>, data: Autosuggest.SuggestionSelectedEventData<IQuestion>): void {
 		const question: IQuestion = data.suggestion;
 		// alert(`Selected question is ${question.questionId} (${question.text}).`);
-		this.props.onSelectQuestion(question.questionId);
+		this.props.onSelectQuestion(question.categoryId, question.questionId);
 	}
 
 	/*

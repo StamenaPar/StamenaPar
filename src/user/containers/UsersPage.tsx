@@ -38,7 +38,7 @@ const mapStateToProps = (store: IAppState, ownProps: IProps ) => {
 		roleIdEditing,
 		canEdit: ownProps.canEdit,
 		isDetail,
-		who: store.topState.top?.auth?.who
+		who: store.topState.top.auth!.who
 	};
 };
 

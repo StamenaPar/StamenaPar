@@ -16,6 +16,7 @@ import { QuestionActions,
 	editCategory,
 	removeCategory,
 	storeCategory,
+	updateCategory,
 	addAndAssignNewAnswer,
 	toggleCategory
 } from '../actions'
@@ -30,9 +31,18 @@ interface IProps {
 // Grab the categories from the store and make them available on props
 const mapStateToProps = (store: IAppState, ownProps: IProps ) => {
 	const {categoriesState, tagState} = store;
-	const { categories, question, categoryOptions, formMode, categoryIdEditing, isDetail } = categoriesState; 
+	const { 
+		categories,
+		categoryQuestions,
+		question,
+		categoryOptions,
+		formMode,
+		categoryIdEditing,
+		isDetail
+	} = categoriesState; 
 	return {
 		categories,
+		categoryQuestions,
 		categoryOptions,
 		question: question!,
 		formMode,
@@ -40,13 +50,13 @@ const mapStateToProps = (store: IAppState, ownProps: IProps ) => {
 		canEdit: ownProps.canEdit,
 		isDetail,
 		tagOptions: tagState.tags.map(f => ({ label: f.name, value: f.tagId, color: f.color })),
-		who: store.topState.top!.auth!.who
+		who: store.topState.top.auth!.who
 	};
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<QuestionActions>) => {
 	return {
-		onSelectQuestion: (questionId: number) => dispatch<any>(getQuestion(questionId)),
+		onSelectQuestion: (categoryId: number, questionId: number) => dispatch<any>(getQuestion(categoryId, questionId)),
 		add: (categoryId: number, text: string, canEdit?: boolean) => dispatch<any>(addQuestion(categoryId, text, canEdit)),
 		edit: (categoryId: number, questionId: number) => dispatch<any>(editQuestion(categoryId, questionId)),
 		remove: (categoryId: number, questionId: number) => dispatch<any>(removeQuestion(categoryId, questionId)),
@@ -57,6 +67,7 @@ const mapDispatchToProps = (dispatch: Dispatch<QuestionActions>) => {
 		editCategory: (categoryId: number) =>  dispatch<any>(editCategory(categoryId)),
 		removeCategory: (categoryId: number) => dispatch<any>(removeCategory(categoryId)),
 		storeCategory: (group: ICategory) => dispatch<any>(storeCategory(group)),
+		updateCategory: (group: ICategory) => dispatch<any>(updateCategory(group)),
 
 		addAndAssignNewAnswer: (categoryId: number, questionId: number, answer: IAnswer, formMode: string) => {
 			dispatch<any>(addAndAssignNewAnswer(categoryId, questionId, answer, formMode))

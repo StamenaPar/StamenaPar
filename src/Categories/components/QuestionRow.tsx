@@ -10,7 +10,7 @@ import { IQuestion } from '../types';
 
 interface IQuestionRowProps {
 	question: IQuestion;
-	onSelectQuestion: (questionId: number) => IQuestion;
+	onSelectQuestion: (categoryId: number, questionId: number) => IQuestion;
 	edit: (categoryId: number, questionId: number) => void;
 	remove: (categoryId: number, questionId: number) => void;
 }
@@ -26,7 +26,7 @@ const QuestionRow: React.FC<IQuestionRowProps> = (props: IQuestionRowProps) => {
 		<div ref={hoverRef} className="name">
 			<button
 				className="question-button"
-				onClick={() => onSelectQuestion(questionId)}>
+				onClick={() => onSelectQuestion(categoryId, questionId)}>
 				{question.text}
 			</button>
 			{hoverProps.isHovered && 

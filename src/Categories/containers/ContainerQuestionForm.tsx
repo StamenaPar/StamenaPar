@@ -14,6 +14,7 @@ import { QuestionActions,
 	editQuestion,
 	removeQuestion,
 	storeQuestion,
+	updateQuestion,
 	cancelQuestion,
 	removeQuestionAnswer,
 	assignQuestionAnswer,
@@ -29,8 +30,10 @@ import { QuestionForm } from '../components/QuestionForm';
 const joinQuestionAnswers = (question: IQuestion | undefined, answers: IAnswer[]) : IQuestionAnswer[]=> {
 	if (question === undefined || question.answers.length === 0 || answers === undefined)
 		return [];
-	console.log({question, answers})
-	const questionAnswers = question.answers.map(qa => ({...qa, text: answers.find(a => a.answerId === qa.answerId)!.text}));
+	const questionAnswers = question.answers.map(qa => ({
+			...qa, text: answers.find(a => a.answerId === qa.answerId)!.text
+		})
+	);
 	return questionAnswers.sort((a,b) => a.assigned < b.assigned ? 1 : -1);
 }
 
@@ -56,11 +59,12 @@ const mapStateToProps = (store: IAppState, ownProps: IProps ) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<QuestionActions>) => {
 	return {
-		onSelectQuestion: (questionId: number) => dispatch<any>(getQuestion(questionId)),
+		onSelectQuestion: (categoryId: number, questionId: number) => dispatch<any>(getQuestion(categoryId, questionId)),
 		add: (categoryId: number, text: string, canEdit?: boolean) => dispatch<any>(addQuestion(categoryId, text, canEdit)),
 		edit: (categoryId: number, questionId: number) => dispatch<any>(editQuestion(categoryId, questionId)),
 		remove: (categoryId: number, questionId: number) => dispatch<any>(removeQuestion(categoryId, questionId)),
-		saveForm: (question: IQuestion, formMode: string) => dispatch<any>(storeQuestion(question, formMode)),
+		saveForm: (question: IQuestion, formMode: string) => 
+			dispatch<any>(formMode==='add'?storeQuestion(question):updateQuestion(question)),
 		cancel: () => dispatch<any>(cancelQuestion()),
 
 		// question answers

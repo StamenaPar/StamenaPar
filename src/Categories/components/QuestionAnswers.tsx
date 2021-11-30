@@ -117,7 +117,12 @@ const QuestionAnswers: React.FC<IProps> = (props: IProps) => {
 								/>
 							</td>
 							<td width="35px">
-								<button className="button-edit" title="Add a new Answer" onClick={() => goDetail(true)}>
+								<button className="button-edit" title="Add a new Answer" onClick={
+									(e) => {
+										goDetail(true);
+										e.preventDefault()
+									}
+								}>
 									<FontAwesomeIcon icon={faPlus} color='lightblue' />
 								</button>
 							</td>

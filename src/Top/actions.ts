@@ -2,10 +2,11 @@
 import { ActionCreator, Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 // Import Top Typing
-import { ITop, ITopJson, ITopState } from './types';
+import { ILogin, ITop, ITopJson, ITopState } from './types';
 
 import { IAppState } from '../store/Store';
 import { IUser } from '../user/types';
+import { findUser, getUser } from '../user/actions';
 
 // localStorage
 export const SUPPORT_TOP = 'SUPPORT_TOP';
@@ -13,7 +14,10 @@ export const SUPPORT_TOP = 'SUPPORT_TOP';
 // Create Action Constants
 export enum TopActionTypes {
 	LOAD_TOP = "LOAD_TOP",
-	AUTHENTICATE = 'AUTHENTICATE'
+	AUTHENTICATE = 'AUTHENTICATE',
+	AUTHENTICATE_WRONG_USERNAME = 'AUTHENTICATE_WRONG_USERNAME',
+	AUTHENTICATE_WRONG_PWD = 'AUTHENTICATE_WRONG_PWD',
+	CANCEL = 'CANCEL'
 }
 
 export interface ILoadTop {
@@ -26,9 +30,21 @@ export interface IAuthenticate {
 	user: IUser;
 }
 
+export interface IAuthenticateWrongUsername {
+	type: TopActionTypes.AUTHENTICATE_WRONG_USERNAME;
+}
+export interface IAuthenticateWrongPwd {
+	type: TopActionTypes.AUTHENTICATE_WRONG_PWD;
+}
+
+
+export interface ICancel {
+	type: TopActionTypes.CANCEL;
+}
+
 
 // Combine the action types with a union (we assume there are more)
-export type TopActions = ILoadTop | IAuthenticate;
+export type TopActions = ILoadTop | IAuthenticate | IAuthenticateWrongUsername | IAuthenticateWrongPwd | ICancel;
 
 const isWebStorageSupported = () => 'localStorage' in window
 
@@ -54,7 +70,7 @@ const parseObj = (json: ITopJson): ITop => {
 }
 
 export const loadTop: ActionCreator<
-	ThunkAction<Promise<any>, ITopState, null, IAuthenticate>
+	ThunkAction<Promise<any>, IAppState, null, IAuthenticate>
 > = () => {
 	return async (dispatch: Dispatch) => {
 		try {
@@ -84,18 +100,49 @@ export const loadTop: ActionCreator<
 }
 
 export const authenticate: ActionCreator<
-	ThunkAction<Promise<any>, ITopState, null, IAuthenticate>
-> = (user: IUser) => {
-	return async (dispatch: Dispatch) => {
+	ThunkAction<Promise<any>, IAppState, null, IAuthenticate>
+> = (loginUser: ILogin) => {
+
+	return async (dispatch: Dispatch, getState: () => IAppState) => {
 		try {
-			dispatch({
-				type: TopActionTypes.AUTHENTICATE,
-				user
-			});
+			dispatch<any>(findUser(loginUser.name))
+				.then((user: IUser) => {
+					if (user) {
+						if (user.pwd === loginUser.pwd) {
+							dispatch({
+								type: TopActionTypes.AUTHENTICATE,
+								user
+							});
+						}
+						else {
+							dispatch({
+								type: TopActionTypes.AUTHENTICATE_WRONG_PWD
+							});
+						}
+					}
+					else {
+						dispatch({
+							type: TopActionTypes.AUTHENTICATE_WRONG_USERNAME
+						});
+					}
+				});
 		}
 		catch (err) {
 			console.error(err);
 		}
 	};
 }
+
+export const cancelLogin: ActionCreator<any> = () => {
+	return (dispatch: Dispatch) => {
+		try {
+			dispatch({
+				type: TopActionTypes.CANCEL
+			});
+		} catch (err) {
+			console.error(err);
+		}
+	};
+};
+
 
