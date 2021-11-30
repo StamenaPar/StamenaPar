@@ -1,7 +1,7 @@
 import { applyMiddleware, combineReducers, createStore, Store } from 'redux';
 import thunk from 'redux-thunk';
 
-import { categoriesReducer } from '../Categories/reducer';
+import { categoriesReducer } from '../Categories/categoriesReducer';
 import { answerReducer } from '../Answers/reducer';
 
 import { IAnswerState } from '../Answers/types';

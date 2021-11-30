@@ -38,7 +38,7 @@ const QuestionAnswerRow: React.FC<IQuestionAnswerRowProps> = (props: IQuestionAn
 				{questionAnswer.text}
 			</button>
 			{hoverProps.isHovered &&
-				<button className="button-edit" title="Copy Resolution to Cliboard"
+				<button className="button-edit" title="Copy Answer to Cliboard"
 					onClick={(e) => {
 						//const input = document.querySelector<HTMLInputElement>('#' + id);
 						if (navigator.clipboard) {
@@ -57,7 +57,15 @@ const QuestionAnswerRow: React.FC<IQuestionAnswerRowProps> = (props: IQuestionAn
 				</button>
 			}
 			{hoverProps.isHovered &&
-				<button className="button-remove" title="Remove" onClick={() => removeQuestionAnswer(categoryId, questionId, answerId)}>
+				<button 
+					className="button-remove"
+					title="Remove"
+					onClick={(e) => {
+							removeQuestionAnswer(categoryId, questionId, answerId);
+							e.preventDefault();
+						}
+					}
+				>
 					<FontAwesomeIcon icon={faWindowClose} color='lightblue' />
 				</button>
 			}

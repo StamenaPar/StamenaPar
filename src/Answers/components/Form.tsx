@@ -61,7 +61,7 @@ const Form: React.FC<IProps> = (props: IProps) => {
 				</>
 			}
 
-			<label htmlFor="text">Resolution</label>
+			<label htmlFor="text">Answer</label>
 			<textarea
 				id="text"
 				name="text"

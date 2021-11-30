@@ -4,17 +4,18 @@ import { ThunkAction } from 'redux-thunk';
 // import axios from 'axios';
 
 // Import Question Typing
-import { IQuestion, ICategory, ICategoryJson, ICategoriesState, IQuestionJson } from './types';
+import { IQuestion, ICategory, ICategoryJson, ICategoriesState, IQuestionJson, ICategoryState } from './types';
 
 import { addAnswer, AnswerActionTypes, storeAnswer } from '../Answers/actions'
 import { IAnswer, IAnswerState } from '../Answers/types';
 
 ///////////////////////////////////////////////////
 // localStorage
-import { SUPPORT_CATEGORIES } from './reducer';
+import { initialCategory, SUPPORT_CATEGORIES } from './categoriesReducer';
 
 import data from "./data.json"
 import { IAppState } from '../store/Store';
+import { reduceQuestions } from './categoryReducer';
 
 const parseFromJson = (): ICategory[] => {
 	return data.map(g => parseDates(g));
@@ -50,12 +51,12 @@ const parseDates = (g: ICategoryJson): ICategory => {
 // Create Action Constants
 export enum QuestionActionTypes {
 	LOAD_CATEGORIES = 'LOAD_CATEGORIES',
-	LOAD_CATEGORY = 'LOAD_CATEGORY',
 	GET_QUESTION = 'GET_QUESTION',
 	ADD_QUESTION = 'ADD_QUESTION',
 	EDIT_QUESTION = 'EDIT_QUESTION',
 	REMOVE_QUESTION = 'REMOVE_QUESTION',
 	STORE_QUESTION = 'STORE_QUESTION',
+	UPDATE_QUESTION = 'UPDATE_QUESTION',
 	CANCEL_QUESTION = 'CANCEL_QUESTION',
 	// groups
 	ADD_CATEGORY = 'ADD_CATEGORY',
@@ -63,6 +64,7 @@ export enum QuestionActionTypes {
 	EDIT_CATEGORY = 'EDIT_CATEGORY',
 	REMOVE_CATEGORY = 'REMOVE_CATEGORY',
 	STORE_CATEGORY = 'STORE_CATEGORY',
+	UPDATE_CATEGORY = 'UPDATE_CATEGORY',
 	// question answers
 	REMOVE_QUESTION_ANSWER = 'REMOVE_QUESTION_ANSWER',
 	ASSIGN_QUESTION_ANSWER = 'ASSIGN_QUESTION_ANSWER',
@@ -76,25 +78,21 @@ export enum QuestionActionTypes {
 export interface ILoad {
 	type: QuestionActionTypes.LOAD_CATEGORIES;
 	categories: ICategory[];
-}
-
-export interface ILoadCategory {
-	type: QuestionActionTypes.LOAD_CATEGORY;
-	questions: IQuestion[];
+	categoryQuestions: Map<number, ICategoryState>
 }
 
 
 export interface IGet {
 	type: QuestionActionTypes.GET_QUESTION;
+	categoryId: number;
 	questionId: number;
 }
 
 export interface IAdd {
 	type: QuestionActionTypes.ADD_QUESTION;
 	createdBy: number;
-	categoryId: number,
-	text: string
-	//questionId: number,
+	categoryId: number;
+	text: string;
 }
 
 export interface IEdit {
@@ -106,11 +104,16 @@ export interface IEdit {
 export interface IRemove {
 	type: QuestionActionTypes.REMOVE_QUESTION;
 	categoryId: number,
-	questionId: number,
+	questionId: number
 }
 
 export interface IStore {
 	type: QuestionActionTypes.STORE_QUESTION;
+	question: IQuestion;
+}
+
+export interface IUpdate {
+	type: QuestionActionTypes.UPDATE_QUESTION;
 	question: IQuestion;
 }
 
@@ -141,9 +144,13 @@ export interface IRemoveCategory {
 
 export interface IStoreCategory {
 	type: QuestionActionTypes.STORE_CATEGORY;
-	group: ICategory;
+	category: ICategory;
 }
 
+export interface IUpdateCategory {
+	type: QuestionActionTypes.UPDATE_CATEGORY;
+	category: ICategory;
+}
 
 // question answers
 export interface IRemoveQuestionAnswer {
@@ -176,8 +183,8 @@ export interface IAddAndAssignNewAnswer {
 
 
 // Combine the action types with a union (we assume there are more)
-export type QuestionActions = ILoad | ILoadCategory | IGet | IAdd | IEdit | IRemove | IStore | ICancel |
-	IAddCategory | IToggleCategory | IEditCategory | IRemoveCategory | IStoreCategory |
+export type QuestionActions = ILoad | IGet | IAdd | IEdit | IRemove | IStore | IUpdate | ICancel |
+	IAddCategory | IToggleCategory | IEditCategory | IRemoveCategory | IStoreCategory | IUpdateCategory |
 	IRemoveQuestionAnswer | IAssignQuestionAnswer |
 	ISetIsDetail |
 	IAddAndAssignNewAnswer;
@@ -209,24 +216,36 @@ export const loadCategories: ActionCreator<
 					loadedFromStorage = true;
 				}
 			}
-
+			
 			if (!loadedFromStorage) {
 				// load from data
 				categories = parseFromJson();
-				categories.forEach(category => {
+				for (let category of categories) {
 					category.questions.forEach(q => {
 						q.categoryId = category.categoryId;
 						q.words = q.text.split(' ');
 					})
 					localStorage.setItem(`CATEGORY_${category.categoryId}`, JSON.stringify(category.questions));
-					category.questions = [];
-				})
+				}
+			}
+			
+			const categoryQuestions = new Map<number, ICategoryState>();
+			for (let category of categories) {
+				const categoryState: ICategoryState = {
+					questions: [...category.questions]
+				}
+				categoryQuestions.set(category.categoryId, categoryState);
+				category.questions = [];
+			}
+			
+			if (!loadedFromStorage) {
 				localStorage.setItem(SUPPORT_CATEGORIES, JSON.stringify(categories));
 			}
-
+			
 			dispatch({
 				type: QuestionActionTypes.LOAD_CATEGORIES,
-				categories
+				categories,
+				categoryQuestions
 			});
 		}
 		catch (err) {
@@ -239,11 +258,12 @@ export const loadCategories: ActionCreator<
 // Get Question <Promise<Return Type>, State Interface, Type of Param, Type of Action> 
 export const getQuestion: ActionCreator<
 	ThunkAction<Promise<any>, ICategoriesState, string, IGet>
-> = (questionId: number) => {
+> = (categoryId: number, questionId: number) => {
 	return async (dispatch: Dispatch) => {
 		try {
 			dispatch({
 				type: QuestionActionTypes.GET_QUESTION,
+				categoryId,
 				questionId
 			});
 		} catch (err) {
@@ -318,8 +338,9 @@ export const selectQuestionAnswer: ActionCreator<
 				questionId: questionId,
 				answerId: answerId,
 			});
-			dispatch<any>(getQuestion(questionId))	// refresh state of question
-		} catch (err) {
+			//dispatch<any>(getQuestion(questionId))	// refresh state of question
+		}
+		catch (err) {
 			console.error(err);
 		}
 	};
@@ -338,8 +359,9 @@ export const copyQuestionAnswer: ActionCreator<
 				questionId: questionId,
 				answerId: answerId,
 			});
-			dispatch<any>(getQuestion(questionId))	// refresh state of question
-		} catch (err) {
+			//dispatch<any>(getQuestion(questionId))	// refresh state of question
+		}
+		catch (err) {
 			console.error(err);
 		}
 	};
@@ -351,15 +373,15 @@ export const removeQuestionAnswer: ActionCreator<
 	return async (dispatch: Dispatch) => {
 		try {
 			await delay()
-			// warning: store answer, after upodate, to local storage
 			dispatch({
 				type: QuestionActionTypes.REMOVE_QUESTION_ANSWER,
 				categoryId: categoryId,
 				questionId: questionId,
 				answerId: answerId,
 			});
-			dispatch<any>(getQuestion(questionId))	// refresh state of question
-		} catch (err) {
+			// dispatch<any>(getQuestion(questionId))	// refresh state of question
+		}
+		catch (err) {
 			console.error(err);
 		}
 	};
@@ -381,8 +403,9 @@ export const assignQuestionAnswer: ActionCreator<
 				answerId,
 				assignedBy: getState().topState.top!.auth!.who!.userId,
 			});
-			dispatch<any>(getQuestion(questionId))	// refresh state of question
-		} catch (err) {
+			//dispatch<any>(getQuestion(questionId))	// refresh state of question
+		}
+		catch (err) {
 			console.error(err);
 		}
 	};
@@ -404,30 +427,76 @@ export const setIsDetail: ActionCreator<
 	};
 };
 
+
 export const storeQuestion: ActionCreator<
-	ThunkAction<Promise<any>, ICategoriesState, null, IStore>
-> = (question: IQuestion, formMode: string) => {
-	return async (dispatch: Dispatch) => {
+	ThunkAction<Promise<any>, IAppState, null, IStore>
+> = (question: IQuestion) => {
+	return async (dispatch: Dispatch, getState: () => IAppState) => {
+		const { categoryId } = question;
 		try {
-			if (formMode === 'add') {
-				await delay();
+			//await delay();
+			if (categoryId === 0) {
+				const res = await addCategoryUnknown(getState(), dispatch);
 				dispatch({
 					type: QuestionActionTypes.STORE_QUESTION,
 					question
 				});
 			}
 			else {
-				await delay();
 				dispatch({
 					type: QuestionActionTypes.STORE_QUESTION,
 					question
 				});
 			}
-		} catch (err) {
+		}
+		catch (err) {
 			console.error(err);
 		}
 	};
 };
+
+const addCategoryUnknown = async (state: IAppState, dispatch: Dispatch) => {
+	if (state.categoriesState.categories.find(c => c.categoryId === 0))
+		return Promise.resolve(-1);
+	const newCategory = {
+		...initialCategory,
+		categoryId: 0,
+		title: 'Unknown',
+		questions: []
+	}
+	return dispatch<any>(storeCategory(newCategory))
+		.then((categoryId: number) => {
+			return categoryId;
+		});
+}
+
+export const updateQuestion: ActionCreator<
+	ThunkAction<Promise<any>, IAppState, null, IUpdate>
+> = (question: IQuestion) => {
+	return async (dispatch: Dispatch, getState: () => IAppState) => {
+		try {
+			const { categoryId } = question;
+			await delay();
+			if (categoryId === 0) {
+				const res = await addCategoryUnknown(getState(), dispatch);
+				dispatch({
+					type: QuestionActionTypes.UPDATE_QUESTION,
+					question
+				});
+			}
+			else {
+				dispatch({
+					type: QuestionActionTypes.UPDATE_QUESTION,
+					question
+				});
+			}
+		}
+		catch (err) {
+			console.error(err);
+		}
+	};
+};
+
 
 const delay = (): Promise<any> => {
 	return new Promise((resolve, reject) => {
@@ -510,7 +579,7 @@ export const removeCategory: ActionCreator<
 			// warning: store answer, after update, to local storage
 			dispatch({
 				type: QuestionActionTypes.REMOVE_CATEGORY,
-				categoryId: categoryId
+				categoryId
 			});
 		} catch (err) {
 			console.error(err);
@@ -519,50 +588,39 @@ export const removeCategory: ActionCreator<
 };
 
 export const storeCategory: ActionCreator<
-	ThunkAction<Promise<any>, ICategoriesState, null, IStoreCategory>
-> = (group: ICategory) => {
-	return async (dispatch: Dispatch) => {
+	ThunkAction<Promise<any>, IAppState, null, IStoreCategory>
+> = (category: ICategory) => {
+	return async (dispatch: Dispatch, getState: () => IAppState) => {
 		try {
 			// await updateCategoryFromLocalStorage(group);
 			dispatch({
 				type: QuestionActionTypes.STORE_CATEGORY,
-				group
+				category
+			});
+			return Promise.resolve(category.categoryId) //getState().categoriesState.categories.length)
+		}
+		catch (err) {
+			console.error(err);
+		}
+	};
+};
+
+
+export const updateCategory: ActionCreator<
+	ThunkAction<Promise<any>, ICategoriesState, null, IStoreCategory>
+> = (category: ICategory) => {
+	return async (dispatch: Dispatch) => {
+		try {
+			// await updateCategoryFromLocalStorage(group);
+			dispatch({
+				type: QuestionActionTypes.UPDATE_CATEGORY,
+				category
 			});
 		} catch (err) {
 			console.error(err);
 		}
 	};
 };
-
-/*
-const getCategoriesFromLocalStorage = (): Promise<any> => {
-	return new Promise((resolve, reject) => {
-		setTimeout(() => {
-			  resolve({
-				 'status': 200,
-				 'content-type': 'application/json',
-				 'data' : {
-					'results': storageCategoriesByCategorys
-				 }
-			  })
-			}, 250)
-	})
-}
-
-const updateCategoryFromLocalStorage = (group: ICategory): Promise<any> => {
-	return new Promise((resolve, reject) => {
-		setTimeout(() => {
-			resolve({
-				'status': 200,
-				'content-type': 'application/json',
-				'data': {
-					'results': group
-				}
-			})
-		}, 50)
-	})
-}
-*/
 
 export const addAndAssignNewAnswer: ActionCreator<
 	ThunkAction<Promise<any>, IAppState, null, IStore>
@@ -575,7 +633,6 @@ export const addAndAssignNewAnswer: ActionCreator<
 				.then((answerId: number) => {
 					dispatch<any>(assignQuestionAnswer(categoryId, questionId, answerId))
 				});
-
 		}
 		catch (err) {
 			console.error(err);

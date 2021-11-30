@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup'
 import { IQuestion, IQuestionAnswer, IFormProps } from '../types';
@@ -17,6 +17,7 @@ import { statusOptions } from '../statusOptions'
 
 
 const Form: React.FC<IFormProps> = (props: IFormProps) => {
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -89,7 +90,8 @@ const Form: React.FC<IFormProps> = (props: IFormProps) => {
           onChange={formik.handleChange}
           //onBlur={formik.handleBlur}
           onBlur={(e: React.FormEvent<HTMLTextAreaElement>): void => {
-            if (isEdit()) formik.submitForm();
+            if (isEdit() && formik.initialValues.text !== formik.values.text)
+              formik.submitForm();
           }}
           value={formik.values.text}
           style={{ width: '100%' }}

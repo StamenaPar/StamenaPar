@@ -86,7 +86,7 @@ const Root: React.SFC<IProps> = props => {
 coolColors();
 
 // Generate the store
-//localStorage.clear(); // !!!!!!!!!!!!
+// localStorage.clear(); // !!!!!!!!!!!!
 
 const store = configureStore();
 store.dispatch(loadCategories());
