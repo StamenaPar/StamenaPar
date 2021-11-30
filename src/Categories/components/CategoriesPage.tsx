@@ -3,7 +3,6 @@ import { useRef } from 'react'
 
 import { IComponentProps } from '../types'
 
-import { IQuestion } from '../types';
 
 import { AutoSuggest } from '../../components/AutoSuggest';
 import ContainerQuestionForm from '../containers/ContainerQuestionForm';
@@ -13,6 +12,7 @@ import { useParams } from 'react-router-dom' // useRouteMatch
 import { DetailView } from './DetailView';
 
 import { COLORS } from '../../formik/theme';
+import { updateCategory } from '../actions';
 const color = 'blue';
 
 type SupportParams = {
@@ -22,12 +22,13 @@ type SupportParams = {
 const Page: React.FC<IComponentProps> = (props: IComponentProps) => {
 
 	let { tekst } = useParams<SupportParams>();
-	const { categories, question, 
+	const { categories, categoryQuestions, question, 
 			formMode, categoryIdEditing, onSelectQuestion, add, edit, remove, canEdit,
-			addCategory, toggleCategory, editCategory, removeCategory, storeCategory,
+			addCategory, toggleCategory, editCategory, removeCategory, storeCategory, updateCategory,
 			addAndAssignNewAnswer,
 			who } = props;
 
+		
 	const inputEl = useRef<HTMLInputElement>(null);
 	setTimeout(() => { 
 		if (inputEl.current !== null)	 {
@@ -41,6 +42,8 @@ const Page: React.FC<IComponentProps> = (props: IComponentProps) => {
 	// 	console.log(div)
 	// 	div!.style.display = 'block';
 	// }
+
+	console.log('RENDERUJEM Categories ----------->>>>>>>>>>')
 
 	return (
 	   <>
@@ -65,13 +68,16 @@ const Page: React.FC<IComponentProps> = (props: IComponentProps) => {
 						<h3>Categories</h3>
 						{categories && 
 							categories.map(category => {
-								const {categoryId, title, isExpanded, questions: categories} = category;
+								const {categoryId, title, isExpanded/*, questions: categories*/} = category;
+								console.log('RENDAM categoryQuestions:', categoryQuestions)
+								const categoryState = categoryQuestions.get(categoryId);
+								const { questions } = categoryState!;
 								return (
 									<div key={categoryId} style={{ paddingBottom: '5px'}}>
 										<div>
 											{categoryIdEditing === categoryId && 
 												<input ref={inputEl} name="groupTitle" type="text" 
-													onBlur={(e) => storeCategory({...category, title: e.target.value})}
+													onBlur={(e) => updateCategory({...category, title: e.target.value})}
 													defaultValue={title}
 												/>
 											}
@@ -86,7 +92,7 @@ const Page: React.FC<IComponentProps> = (props: IComponentProps) => {
 										</div>
 										{ isExpanded &&
 											<div className="group-categories">
-												{categories.map(question => 
+												{questions.map(question => 
 													<QuestionRow
 														key={question.questionId}
 														question={question}

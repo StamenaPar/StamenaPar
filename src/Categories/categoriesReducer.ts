@@ -6,7 +6,8 @@ import {
 	QuestionActionTypes
 } from './actions';
 
-import { IQuestion, ICategory, ICategoriesState } from './types'
+import { IQuestion, ICategory, ICategoriesState, ICategoryState } from './types'
+import { reduceQuestions } from './categoryReducer'
 
 export const SUPPORT_CATEGORIES = 'SUPPORT_CATEGORIES';
 
@@ -35,6 +36,7 @@ export const initialCategory: ICategory = {
 // Define the initial state
 export const initialCategoriesState: ICategoriesState = {
 	categories: [],
+	categoryQuestions: new Map<number, ICategoryState>(),
 	question: undefined,
 	categoryOptions: [],
 	loading: false,
@@ -43,26 +45,16 @@ export const initialCategoriesState: ICategoriesState = {
 	isDetail: false
 };
 
-
-/*
-const getQuestion = (
-			categories: ICategory[], 
-			categoryId: number, 
-			questionId: number) : IQuestion|undefined => {
-	const group = categories.find(g => g.categoryId === categoryId)
-	if (!group)
-		return undefined;
-
-	const question = group
-							.categories
-							.find(q => q.questionId === questionId);
-	return question;
-}
-*/
-
+const storeToStorage: string[] = [
+	QuestionActionTypes.ADD_CATEGORY, 
+	QuestionActionTypes.TOGGLE_CATEGORY,
+	QuestionActionTypes.STORE_CATEGORY,
+	QuestionActionTypes.UPDATE_CATEGORY,
+	QuestionActionTypes.REMOVE_CATEGORY
+] 
 
 const aTypesToStore = Object.keys(QuestionActionTypes)
-	.filter(a => a !== QuestionActionTypes.LOAD_CATEGORIES);
+	.filter(a => storeToStorage.includes(a));
 
 export const categoriesReducer: Reducer<ICategoriesState, QuestionActions> = (state, action) => {
 	const newState = myReducer(state, action);
@@ -72,6 +64,12 @@ export const categoriesReducer: Reducer<ICategoriesState, QuestionActions> = (st
 	return newState;
 }
 
+const getQuestions = (categoryId: number, state: ICategoriesState): IQuestion[] => {
+	const { categoryQuestions } = state;
+	const categoryState = categoryQuestions.get(categoryId)!;
+	return categoryState.questions
+}
+
 const myReducer: Reducer<ICategoriesState, QuestionActions> = (
 	state = initialCategoriesState,
 	action
@@ -79,14 +77,20 @@ const myReducer: Reducer<ICategoriesState, QuestionActions> = (
 	switch (action.type) {
 
 		case QuestionActionTypes.LOAD_CATEGORIES: {
-			const {categories} = action;
-			// for (let section of categories)
-			// 	for (let question of section.questions)
-			// 		question.words = question.text.split(' ');
-
-			const categoryOptions = categories.map(g => ({value: g.categoryId, label: g.title}))
-			categoryOptions.unshift({value: 0, label: 'Unknown'})
-			
+			const { categories, categoryQuestions } = action;
+			//
+			const categoryOptions = categories.map(g => ({ value: g.categoryId, label: g.title }))
+			categoryOptions.unshift({ value: 0, label: 'Unknown' })
+			//
+			/*const categoryQuestions = new Map<number, ICategoryState>();
+			for (let category of categories) {
+				const categoryState: ICategoryState = {
+					questions: [...category.questions]
+				}
+				categoryQuestions.set(category.categoryId, categoryState);
+				category.questions = [];
+			}*/
+			//
 			// if (fromData) {
 			// 	categories.forEach(category => {
 			// 		category.questions.forEach(q => q.categoryId = category.categoryId);
@@ -95,23 +99,19 @@ const myReducer: Reducer<ICategoriesState, QuestionActions> = (
 			// 	} )
 			// 	localStorage.setItem(SUPPORT_CATEGORIES, JSON.stringify(categories));
 			// }
-
 			return {
 				...state,
 				categories,
+				categoryQuestions,
 				categoryOptions
 			};
 		}
-		
+
 
 		case QuestionActionTypes.GET_QUESTION: {
-			let question = undefined;
-			for (let section of state.categories) {
-				question = section.questions
-					.find(question => question.questionId === action.questionId);
-				if (question)
-					break;
-			}
+			const { categoryId, questionId } = action;
+			const questions = getQuestions(categoryId, state)
+			const question = questions.find(q => q.questionId === questionId);
 			return {
 				...state,
 				question
@@ -119,122 +119,98 @@ const myReducer: Reducer<ICategoriesState, QuestionActions> = (
 		}
 
 		case QuestionActionTypes.ADD_QUESTION: {
-			// const questionCategory = state.categories.find(g => g.categoryId === action.categoryId);
-			// const questionId = questionCategory!.categories.length === 0
-			// 	? 1
-			// 	: Math.max(...questionCategory!.categories.map(q => q.questionId)) + 1;
-			let questionIdMax = 0;
-			for (let section of state.categories) {
-				for (let question of section.questions) 
-					if (question.questionId > questionIdMax)
-						questionIdMax = question.questionId
-			}
+			const { categoryId } = action;
+			const questions = getQuestions(categoryId, state)
+			const questionId = Math.max(...questions.map(q => q.questionId)) + 1;
 			return {
 				...state,
 				formMode: 'add',
-				question: { 
+				question: {
 					...initialQuestion,
 					createdBy: action.createdBy,
-					categoryId: action.categoryId, 
-					questionId: questionIdMax + 1,
+					categoryId,
+					questionId,
 					text: action.text
 				}
 			};
 		}
 
 		case QuestionActionTypes.EDIT_QUESTION: {
-			const questionCategory = state.categories.find(g => g.categoryId === action.categoryId);
-			const question = questionCategory!.questions
-				.find(question => question.questionId === action.questionId);
+			const { categoryId, questionId } = action;
+			const questions = getQuestions(categoryId, state)
+			const question = questions.find(q => q.questionId === questionId)!;
 			return {
 				...state,
 				formMode: 'edit',
-				question
+				question,
+				questionCopy: { ...question }
 			};
 		}
 
 		case QuestionActionTypes.STORE_QUESTION: {
-			if (state.formMode === 'add') {
-				const { question } = action;
-				if (question.categoryId === 0 && !state.categories.map(g => g.categoryId).includes(0)) {
-					// do something
-					return {
-						...state,
-						formMode: 'edit',
-						categories: [
-							...state.categories,
-							{ 
-								...initialCategory, 
-								categoryId: 0,
-								title: 'Unknown',
-								questions: [question]
-							}
-						]
-					};
-				}
+			const { question } = action;
+			const { categoryId, questionId } = question;
+			const categoryQuestions = reduceQuestions(state.categoryQuestions, action, categoryId);
+			return {
+				...state,
+				formMode: 'edit',
+				categoryQuestions
+			};
+		}
+
+		case QuestionActionTypes.UPDATE_QUESTION: {
+			let { categoryQuestions, questionCopy } = state;
+			const { question } = action;
+			const { categoryId, questionId } = question;
+			const categoryIdCopy = questionCopy!.categoryId;
+			if (question.categoryId === categoryIdCopy) { 
+				// category hasn't been changed
+				categoryQuestions = reduceQuestions(categoryQuestions, action, categoryId);
 				return {
 					...state,
-					formMode: 'edit',
-					categories: state.categories.map(g => g.categoryId !== question.categoryId ?
-						{ ...g, questions: [...g.questions] }
-						:
-						{ ...g, questions: [...g.questions, { ...question }] }
-					)
+					categoryQuestions,
+					formMode: 'edit'
 				};
 			}
 			else {
-				const { categories } = state;
-				const {question} = action;
-				const questionId: number = question.categoryId;
-				const g = categories.find(g => g.categoryId === question.categoryId);
-				const q = g!.questions.find(q => q.questionId === question.questionId);
-				if (q) { // change question
-					return {
-						...state,
-						formMode: 'edit',
-						categories: categories.map(g => g.categoryId !== question.categoryId
-							? { ...g, questions: [...g.questions]	}
-							: {
-								...g, 
-								questions: g.questions
-									.map(q => q.questionId !== question.questionId ?
-										q : { ...question }
-									)
-							}
-						)
-					};
-				}
-				else { // assing question to another group
-					return {
-						...state,
-						formMode: 'edit',
-						categories: categories.map(g => g.categoryId !== question.categoryId
-							? { ...g, questions: [...g.questions.filter(q=> q.questionId !== question.questionId)]	}
-							: {	...g, questions: [...g.questions, { ...question } ]
-							}
-						)
-					};
-				}
+				// assing question to another group
+				// 1) remove question from old category
+				categoryQuestions = reduceQuestions(categoryQuestions, {
+					...action,
+					type: QuestionActionTypes.REMOVE_QUESTION,
+					categoryId: categoryIdCopy,
+					questionId
+				}, categoryIdCopy);
+				// 2) add question  to new category
+				categoryQuestions = reduceQuestions(categoryQuestions, {
+					...action,
+					type: QuestionActionTypes.STORE_QUESTION
+				}, categoryId);
+				//
+				return {
+					...state,
+					categoryQuestions,
+					formMode: 'edit'
+				};
 			}
 		}
 
 		case QuestionActionTypes.CANCEL_QUESTION: {
 			return {
 				...state,
-				formMode: 'display',
+				formMode: 'display'
 			};
 		}
 
 		case QuestionActionTypes.REMOVE_QUESTION: {
+			const { categoryId, questionId } = action;
+			let { categoryQuestions } = state;
+			categoryQuestions = reduceQuestions(categoryQuestions, action, categoryId);
 			return {
 				...state,
+				categoryQuestions,
 				formMode: 'display',
-				question: undefined,
-				categories: state.categories.map(g => g.categoryId !== action.categoryId ?
-					{ ...g, questions: [...g.questions] }
-					:
-					{ ...g, questions: g.questions.filter(q => q.questionId !== action.questionId) }
-				)
+				question: undefined
 			};
 		}
 
@@ -313,16 +289,34 @@ const myReducer: Reducer<ICategoriesState, QuestionActions> = (
 
 		case QuestionActionTypes.STORE_CATEGORY: {
 			// const group = state.categories.find(g => g.categoryId === action.question.categoryId);
+			const { category } = action;
+			const { categoryQuestions } = state;
+			const categoryState: ICategoryState = {
+				questions: [] //...category.questions]
+			}
+			categoryQuestions.set(category.categoryId, categoryState)
+			category.questions = [];
 			return {
 				...state,
 				categoryIdEditing: -1,
-				categories: state.categories.map(g => g.categoryId !== action.group.categoryId ?
-					g
-					:
-					{ ...g, title: action.group.title }
+				categories: [...state.categories, category],
+				categoryQuestions
+			}
+		}
+
+		case QuestionActionTypes.UPDATE_CATEGORY: {
+			// const group = state.categories.find(g => g.categoryId === action.question.categoryId);
+			const { category } = action;
+			return {
+				...state,
+				categoryIdEditing: -1,
+				categories: state.categories.map(g => g.categoryId !== category.categoryId
+					? g
+					: { ...g, title: category.title }
 				)
 			}
 		}
+
 
 		case QuestionActionTypes.REMOVE_CATEGORY: {
 			return {

@@ -14,6 +14,7 @@ import { QuestionActions,
 	editQuestion,
 	removeQuestion,
 	storeQuestion,
+	updateQuestion,
 	cancelQuestion,
 	removeQuestionAnswer,
 	assignQuestionAnswer,
@@ -56,11 +57,12 @@ const mapStateToProps = (store: IAppState, ownProps: IProps ) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<QuestionActions>) => {
 	return {
-		onSelectQuestion: (questionId: number) => dispatch<any>(getQuestion(questionId)),
+		onSelectQuestion: (categoryId: number, questionId: number) => dispatch<any>(getQuestion(categoryId, questionId)),
 		add: (categoryId: number, text: string, canEdit?: boolean) => dispatch<any>(addQuestion(categoryId, text, canEdit)),
 		edit: (categoryId: number, questionId: number) => dispatch<any>(editQuestion(categoryId, questionId)),
 		remove: (categoryId: number, questionId: number) => dispatch<any>(removeQuestion(categoryId, questionId)),
-		saveForm: (question: IQuestion, formMode: string) => dispatch<any>(storeQuestion(question, formMode)),
+		saveForm: (question: IQuestion, formMode: string) => 
+			dispatch<any>(formMode==='add'?storeQuestion(question):updateQuestion(question)),
 		cancel: () => dispatch<any>(cancelQuestion()),
 
 		// question answers
