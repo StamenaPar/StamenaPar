@@ -13,7 +13,7 @@ export const SUPPORT_USERS = 'SUPPORT_USERS';
 export const initialUser: IUser = {
 	roleId: 0,
 	userId: 0,
-	name: '',
+	userName: '',
 	pwd: '',
 	department: 'neki',
 	createdBy: 0,
@@ -102,7 +102,7 @@ const myReducer: Reducer<IUsersState, UserActions> = (
 				...state,
 				allUsers,
 				roleOptions: roles.map(g => ({ label: g.title, value: g.roleId })),
-				userOptions: allUsers.map(user => ({ label: user.name, value: user.userId }))
+				userOptions: allUsers.map(user => ({ label: user.userName, value: user.userId }))
 			};
 		}
 

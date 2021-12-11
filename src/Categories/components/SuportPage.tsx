@@ -35,7 +35,7 @@ const SupportPage: React.FC<IComponentProps> = (props: IComponentProps) => {
 					<button 
 						className="button-edit"
 						title="Create a new Question"
-						onClick={() => { add(0, tekst);	}
+						onClick={() => { add(0, tekst??'');	}
 					}>
 						<FontAwesomeIcon icon={faPlus} color='lightblue' />
 					</button>

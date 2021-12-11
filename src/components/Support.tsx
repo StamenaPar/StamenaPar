@@ -14,7 +14,7 @@ setTimeout(() => {
     div!.setAttribute('style', 'display:none')
 }, 10000)
 
-const App: React.SFC<{}> = () => {
+const Support: React.SFC<{}> = () => {
   return (
     <>
       <h2 style={{textAlign: 'center', marginBlockStart: '0.66rem', marginBlockEnd: '0.1rem' }}>Questions &amp; Answers</h2>
@@ -28,4 +28,4 @@ const App: React.SFC<{}> = () => {
   );
 };
 
-export default App;
+export default Support;

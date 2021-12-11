@@ -6,7 +6,7 @@ import { ILogin, ITop, ITopJson, ITopState } from './types';
 
 import { IAppState } from '../store/Store';
 import { IUser } from '../user/types';
-import { findUser, getUser } from '../user/actions';
+import { findUser, getUser, storeUser } from '../user/actions';
 
 // localStorage
 export const SUPPORT_TOP = 'SUPPORT_TOP';
@@ -14,7 +14,10 @@ export const SUPPORT_TOP = 'SUPPORT_TOP';
 // Create Action Constants
 export enum TopActionTypes {
 	LOAD_TOP = "LOAD_TOP",
+	REGISTER = 'REGISTER',
+	REGISTER_USERNAME_EXISTS = 'REGISTER_USERNAME_EXISTS',
 	AUTHENTICATE = 'AUTHENTICATE',
+	UNAUTHENTICATE = 'UNAUTHENTICATE',
 	AUTHENTICATE_WRONG_USERNAME = 'AUTHENTICATE_WRONG_USERNAME',
 	AUTHENTICATE_WRONG_PWD = 'AUTHENTICATE_WRONG_PWD',
 	CANCEL = 'CANCEL'
@@ -25,6 +28,15 @@ export interface ILoadTop {
 	top: ITop
 }
 
+export interface IRegister {
+	type: TopActionTypes.REGISTER;
+	user: IUser;
+}
+
+export interface IRegisterUsernameExists {
+	type: TopActionTypes.REGISTER_USERNAME_EXISTS;
+}
+
 export interface IAuthenticate {
 	type: TopActionTypes.AUTHENTICATE;
 	user: IUser;
@@ -33,10 +45,14 @@ export interface IAuthenticate {
 export interface IAuthenticateWrongUsername {
 	type: TopActionTypes.AUTHENTICATE_WRONG_USERNAME;
 }
+
 export interface IAuthenticateWrongPwd {
 	type: TopActionTypes.AUTHENTICATE_WRONG_PWD;
 }
 
+export interface IUnAuthenticate {
+	type: TopActionTypes.UNAUTHENTICATE;
+}
 
 export interface ICancel {
 	type: TopActionTypes.CANCEL;
@@ -44,7 +60,14 @@ export interface ICancel {
 
 
 // Combine the action types with a union (we assume there are more)
-export type TopActions = ILoadTop | IAuthenticate | IAuthenticateWrongUsername | IAuthenticateWrongPwd | ICancel;
+export type TopActions = ILoadTop |
+	IRegister |
+	IRegisterUsernameExists |
+	IAuthenticate |
+	IAuthenticateWrongUsername |
+	IAuthenticateWrongPwd |
+	IUnAuthenticate |
+	ICancel;
 
 const isWebStorageSupported = () => 'localStorage' in window
 
@@ -99,13 +122,52 @@ export const loadTop: ActionCreator<
 	};
 }
 
+
+export const register: ActionCreator<
+	ThunkAction<Promise<any>, IAppState, null, IAuthenticate>
+> = (loginUser: ILogin) => {
+	return async (dispatch: Dispatch, getState: () => IAppState) => {
+		try {
+			dispatch<any>(findUser(loginUser.userName))
+				.then((user: IUser) => {
+					if (user) {
+						dispatch({
+							type: TopActionTypes.REGISTER_USERNAME_EXISTS
+						});
+					}
+					else {
+						const user: IUser = {
+							roleId: 44, // Viewers
+							userId: 357, //-1,
+							userName: loginUser.userName,
+							pwd: loginUser.pwd,
+							department: "dept1",
+							createdBy: 0,
+							created: new Date()
+						}
+
+						dispatch<any>(storeUser(user, 'add'))
+							.then((user: IUser) => {
+								dispatch({
+									type: TopActionTypes.REGISTER,
+									user
+								});
+							});
+					}
+				});
+		}
+		catch (err) {
+			console.error(err);
+		}
+	};
+}
+
 export const authenticate: ActionCreator<
 	ThunkAction<Promise<any>, IAppState, null, IAuthenticate>
 > = (loginUser: ILogin) => {
-
 	return async (dispatch: Dispatch, getState: () => IAppState) => {
 		try {
-			dispatch<any>(findUser(loginUser.name))
+			dispatch<any>(findUser(loginUser.userName))
 				.then((user: IUser) => {
 					if (user) {
 						if (user.pwd === loginUser.pwd) {
@@ -133,6 +195,21 @@ export const authenticate: ActionCreator<
 	};
 }
 
+export const unAuthenticate: ActionCreator<
+	ThunkAction<Promise<any>, IAppState, null, IAuthenticate>
+> = () => {
+	return async (dispatch: Dispatch) => {
+		try {
+			dispatch({
+				type: TopActionTypes.UNAUTHENTICATE
+			});
+		}
+		catch (err) {
+			console.error(err);
+		}
+	};
+}
+
 export const cancelLogin: ActionCreator<any> = () => {
 	return (dispatch: Dispatch) => {
 		try {
@@ -146,3 +223,15 @@ export const cancelLogin: ActionCreator<any> = () => {
 };
 
 
+/*
+export function checkAuthentication() {
+	return async (dispatch: Dispatch) => {
+	  const auth = await window.localStorage.getItem("authenticated");
+	  const formattedAuth = typeof auth === "string" ?
+		JSON.parse(auth) :
+		null;
+  
+	  formattedAuth ? dispatch(authenticate()) : dispatch(unauthenticate());
+	};
+  }
+*/

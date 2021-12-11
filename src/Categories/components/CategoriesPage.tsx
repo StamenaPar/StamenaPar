@@ -62,19 +62,17 @@ const Page: React.FC<IComponentProps> = (props: IComponentProps) => {
 
 				<hr />
 
-				<h4 style={{textAlign: 'center'}}>Maintenance (visible only for Admins) </h4>
 				<div className="two-columns">
 					<div className="a">
 						<h3>Categories</h3>
 						{categories && 
 							categories.map(category => {
-								const {categoryId, title, isExpanded/*, questions: categories*/} = category;
-								console.log('RENDAM categoryQuestions:', categoryQuestions)
+								const {categoryId, title, isExpanded} = category;
 								const categoryState = categoryQuestions.get(categoryId);
 								const { questions } = categoryState!;
 								return (
 									<div key={categoryId} style={{ paddingBottom: '5px'}}>
-										<div>
+										<div style={{textAlign: 'start'}}>
 											{categoryIdEditing === categoryId && 
 												<input ref={inputEl} name="groupTitle" type="text" 
 													onBlur={(e) => updateCategory({...category, title: e.target.value})}
@@ -91,7 +89,7 @@ const Page: React.FC<IComponentProps> = (props: IComponentProps) => {
 											)}
 										</div>
 										{ isExpanded &&
-											<div className="group-categories">
+											<div className="group-categories" style={{textAlign: 'start'}}>
 												{questions.map(question => 
 													<QuestionRow
 														key={question.questionId}

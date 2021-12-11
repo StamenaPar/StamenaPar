@@ -5,27 +5,30 @@ import { IAppState } from '../../store/Store';
 
 import { Dispatch } from 'redux'; 
 
-import { authenticate, cancelLogin, TopActions } from '../actions'
+import { register, authenticate, cancelLogin, TopActions } from '../actions'
 
-import { LoginForm } from '../components/LoginFrom';
+import { LoginForm } from '../components/LoginForm';
 import { ILogin, ITop } from '../types';
 
 
 interface IProps {
-	canEdit: boolean
+	canEdit: boolean,
+	isRegister: boolean
 }
 
-const mapStateToProps = (store: IAppState, ownProps: IProps ) => {
+const mapStateToProps = (store: IAppState, ownProps: IProps) => {
 	const { topState } = store;
 	const { top } = topState;
 	const { auth } = top
 	return {
 		isAuthenticated: top.isAuthenticated,
+		uuid: top.uuid,
 		who: !auth
-			? { name: '', pwd:'' } 
-			: { name: auth.who.name, pwd: auth.who.pwd },
+			? { userName: '', pwd:'' } 
+			: { userName: auth.who.userName, pwd: auth.who.pwd },
 		authError: top.authError,
 		canEdit: ownProps.canEdit,
+		isRegister: ownProps.isRegister,
 		formMode: 'edit'
 	};
 };
@@ -33,8 +36,8 @@ const mapStateToProps = (store: IAppState, ownProps: IProps ) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<TopActions>) => {
 	return {
-		saveForm: (login: ILogin, formMode: string) => dispatch<any>(authenticate(login)),
-		cancel: () => dispatch<any>(cancelLogin()),
+		saveForm: (login: ILogin, formMode: string, isRegister: boolean) => dispatch<any>(isRegister?register(login):authenticate(login)),
+		cancel: () => dispatch<any>(cancelLogin())
 	}
 }
 

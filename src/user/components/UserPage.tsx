@@ -43,7 +43,7 @@ const UserPage: React.FC<IRolesProps> = (props: IRolesProps) => {
 	return (
 		<div className="name-container">
 			<hr />
-			<h4 style={{ textAlign: 'center' }}>Maintenance (visible only for Admins) </h4>
+			{/* <h4 style={{ textAlign: 'center' }}>Maintenance (visible only for Admins) </h4> */}
 			<div className="two-columns">
 				<div className="a">
 					<h3>Users by Role</h3>
@@ -52,7 +52,7 @@ const UserPage: React.FC<IRolesProps> = (props: IRolesProps) => {
 							const { roleId: roleId, title, isExpanded, users } = role;
 							return (
 								<div key={roleId} style={{ paddingBottom: '5px' }}>
-									<div>
+									<div style={{textAlign: 'start'}}>
 										{roleIdEditing === roleId &&
 											<input ref={inputEl} name="groupTitle" type="text"
 												onBlur={(e) => storeRole({ ...role, title: e.target.value })}
@@ -69,7 +69,7 @@ const UserPage: React.FC<IRolesProps> = (props: IRolesProps) => {
 										)}
 									</div>
 									{isExpanded &&
-										<div className="group-users" style={{marginLeft: '20px'}}>
+										<div className="group-users" style={{marginLeft: '20px', textAlign: 'start'}}>
 											{users.map(user =>
 												<UserRow
 													key={user.userId}

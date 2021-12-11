@@ -14,7 +14,7 @@ const Form: React.FC<IFormProps> = (props: IFormProps) => {
     initialValues: {
       roleId: props.user.roleId,
       userId: props.user.userId,
-      name: props.user.name,
+      userName: props.user.userName,
       pwd: props.user.pwd,
       department: props.user.department,
       createdBy: props.user.createdBy,
@@ -73,21 +73,21 @@ const Form: React.FC<IFormProps> = (props: IFormProps) => {
           value={formik.values.roleId}
         />
 
-        <label htmlFor="name">Name</label>
+        <label htmlFor="userName">Name</label>
         <textarea
-          id="name"
-          name="name"
+          id="userName"
+          name="userName"
           onChange={formik.handleChange}
           //onBlur={formik.handleBlur}
           onBlur={(e: React.FormEvent<HTMLTextAreaElement>): void => {
             if (isEdit()) formik.submitForm();
           }}
-          value={formik.values.name}
+          value={formik.values.userName}
           style={{ width: '100%' }}
           rows={2}
         />
-        {formik.touched.name && formik.errors.name ? (
-          <div>{formik.errors.name}</div>
+        {formik.touched.userName && formik.errors.userName ? (
+          <div>{formik.errors.userName}</div>
         ) : null}
 
         <label className="id" htmlFor="createdBy">Created by:</label>

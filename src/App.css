@@ -83,6 +83,7 @@ ul.entity-columns > li {
  
  .push-right {
 	margin-left: auto;
+	margin-right: 50px;
  }
 
  nav a {
@@ -167,7 +168,7 @@ ul.entity-columns > li {
  input {
 	padding: .5rem;
 	font-size: 16px;
-	width: 100%;
+	wwwidth: 100%;
 	display: block;
 	border-radius: 4px;
 	border: 1px solid #ccc;
@@ -451,6 +452,17 @@ span.role-title {
 	z-index: 999;
 	background-color: whitesmoke;
 	border-radius: 10px;
+	margin: 5px;
+	padding: 5px;
+}
+
+.auth-username {
+	position: fixed;
+	right: 0;
+	top: 0;
+	z-index: 999;
+	background-color: whitesmoke;
+	border-radius: 5px;
 	margin: 5px;
 	padding: 5px;
 }

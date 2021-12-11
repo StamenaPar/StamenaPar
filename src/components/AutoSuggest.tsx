@@ -23,7 +23,7 @@ const QuestionAutosuggestMulti = Autosuggest as { new(): Autosuggest<IQuestion, 
 
 export class AutoSuggest extends React.Component<{ 
 	categories: ICategory[], 
-	tekst: string, 
+	tekst: string|undefined, 
 	onSelectQuestion: (categoryId: number, questionId: number) => void }, any> {
 	// region Fields
 

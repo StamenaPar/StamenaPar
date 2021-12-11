@@ -6,7 +6,8 @@ import {
 import { ITop, ITopState } from './types';
 
 const initialTop: ITop = {
-	isAuthenticated: false
+	isAuthenticated: null,
+	uuid: null
 };
 
 const initialTopState: ITopState = {
@@ -36,11 +37,12 @@ const myReducer: Reducer<ITopState, TopActions> = (
 			};
 		}
 
-		case TopActionTypes.AUTHENTICATE: {
+		case TopActionTypes.REGISTER: {
 			return {
 				...state,
-				top : {
+				top: {
 					isAuthenticated: true,
+					uuid: "placeholder-uuid",
 					auth: {
 						who: action.user,
 						authenticated: new Date(),
@@ -50,25 +52,60 @@ const myReducer: Reducer<ITopState, TopActions> = (
 			};
 		}
 
-		case TopActionTypes.AUTHENTICATE_WRONG_USERNAME: {
+		case TopActionTypes.REGISTER_USERNAME_EXISTS: {
 			return {
 				...state,
-				top : { 
-					... state.top,
-					authError: "User doesn't exist!"
+				top: {
+					...state.top,
+					authError: "Username already exists, please chose another!"
 				}
 			};
 		}		
 
+		case TopActionTypes.AUTHENTICATE: {
+			return {
+				...state,
+				top: {
+					isAuthenticated: true,
+					uuid: "placeholder-uuid",
+					auth: {
+						who: action.user,
+						authenticated: new Date(),
+						visited: new Date()
+					}
+				}
+			};
+		}
+
+		case TopActionTypes.UNAUTHENTICATE: {
+			return {
+				...state,
+				top: {
+					isAuthenticated: false,
+					uuid: null
+				}
+			};
+		}
+
+		case TopActionTypes.AUTHENTICATE_WRONG_USERNAME: {
+			return {
+				...state,
+				top: {
+					...state.top,
+					authError: "User doesn't exist!"
+				}
+			};
+		}
+
 		case TopActionTypes.AUTHENTICATE_WRONG_PWD: {
 			return {
 				...state,
-				top : {
-					... state.top,
+				top: {
+					...state.top,
 					authError: "Password doesn't match!"
 				}
 			};
-		}		
+		}
 
 
 		default:

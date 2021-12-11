@@ -202,7 +202,7 @@ export const findUser: ActionCreator<
 			const {usersState} = getState();
 			let user;
 			for (let role of usersState.roles) {
-				user = role.users.find(user => user.name === name);
+				user = role.users.find(user => user.userName === name);
 				if (user)
 					break;
 			}
@@ -287,17 +287,25 @@ export const setIsDetail: ActionCreator<
 };
 
 export const storeUser: ActionCreator<
-	ThunkAction<Promise<any>, IUsersState, null, IStore>
+	ThunkAction<Promise<any>, IAppState, null, IStore>
 > = (user: IUser, formMode: string) => {
-	return async (dispatch: Dispatch) => {
+	return async (dispatch: Dispatch, getState: () => IAppState) => {
 		try {
 			if (formMode === 'add') {
 				await delay();
-				dispatch({
+
+				// if userId == -1 nadji max
+				// return dispatch<any>(addUser(xxx))
+				// 	.then((categoryId: number) => {
+				// 		return categoryId;
+				// 	});
+
+				await dispatch({
 					type: UserActionTypes.STORE_USER,
 					user,
 					formMode
 				});
+				return user;
 			}
 			else {
 				await delay();

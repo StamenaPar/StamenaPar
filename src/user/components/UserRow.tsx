@@ -27,7 +27,7 @@ const UserRow: React.FC<IRowProps> = (props: IRowProps) => {
 			<button
 				className="user-button"
 				onClick={() => onSelectUser(userId)}>
-				{user.name}
+				{user.userName}
 			</button>
 			{hoverProps.isHovered && 
 				<button className="button-edit" title="Edit" onClick={() => edit(roleId, userId)}>

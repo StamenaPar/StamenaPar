@@ -7,7 +7,7 @@ import { IUser, IUserJson } from "../user/types";
 // -----
 
 
-interface IAuth {
+export interface IAuth {
 	who: IUser,
 	authenticated?: Date,
 	visited?: Date
@@ -23,7 +23,8 @@ export interface IAuthJson extends Omit<IAuth, 'who' | 'authenticated' | 'visite
 // Top
 // -----
 export interface ITop {
-	isAuthenticated: boolean;
+	isAuthenticated: boolean | null;
+	uuid: string | null;
 	authError?: string,
 	auth?: IAuth;
 }
@@ -37,16 +38,18 @@ export interface ITopState {
 
 
 export interface IFormProps {
-	isAuthenticated: boolean;
+	isAuthenticated: boolean | null;
+	uuid: string | null;
 	who: ILogin,
 	authError?: string,
 	formMode: string;
 	canEdit: boolean,
+	isRegister: boolean,
 	cancel: () => void;
-	saveForm: (login: ILogin, formMode: string) => void;
+	saveForm: (login: ILogin, formMode: string, isRegister: boolean) => void;
   }
 
   export interface ILogin {
-	  name: string,
+	  userName: string,
 	  pwd: string,
   }

@@ -4,7 +4,7 @@ import { IOption } from '../common/types';
 export interface IUser {
 	roleId: number,
 	userId: number,
-	name: string;
+	userName: string;
 	pwd: string,
 	department: string,
 	createdBy: number,

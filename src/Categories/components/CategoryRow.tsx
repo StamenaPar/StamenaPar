@@ -22,7 +22,7 @@ const CategoryRow: React.FC<IQuestionRowProps> = (props: IQuestionRowProps) => {
 	const {categoryId, title, questions: categories, isExpanded} = category;
 
 	return (
-		<div ref={hoverRef} key={categoryId} className="name" >
+		<div ref={hoverRef} key={categoryId} className="name">
 			<button
 				className="button-edit"
 				title="Expand"
