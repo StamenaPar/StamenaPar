@@ -1,7 +1,7 @@
 import React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { HashRouter as Router, Route, Link  } from 'react-router-dom' // useRouteMatch
+import { HashRouter as Router, Route, Link } from 'react-router-dom' // useRouteMatch
 
 import { Provider } from 'react-redux';
 
@@ -11,6 +11,8 @@ import configureStore, { IAppState } from './store/Store';
 import { loadCategories } from './Categories/actions';
 import { getAllAnswers } from './Answers/actions';
 
+import 'bootstrap/dist/css/bootstrap.css'
+import './formik/formikStyles.css';
 import './index.css';
 import './App.css';
 
@@ -18,7 +20,6 @@ import AnswersPage from './Answers/containers/Page'
 import containers from './Categories/containers/CategoriesPage'
 
 import './formik/formikStyles.css';
-import { coolColors } from './cool-colors'
 import { getAllUsers, storeUser } from './user/actions';
 import { getAllTags } from './roleTags/actions';
 import UsersPage from './user/containers/UsersPage';
@@ -31,7 +32,6 @@ interface IProps {
 	store: Store<IAppState>;
 }
 
-coolColors();
 
 // Generate the store
 // localStorage.clear(); // !!!!!!!!!!!!

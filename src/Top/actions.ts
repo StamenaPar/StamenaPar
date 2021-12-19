@@ -14,6 +14,7 @@ export const SUPPORT_TOP = 'SUPPORT_TOP';
 // Create Action Constants
 export enum TopActionTypes {
 	LOAD_TOP = "LOAD_TOP",
+	NAVBAR_TOGGLE = 'NAVBAR_TOGGLE',
 	REGISTER = 'REGISTER',
 	REGISTER_USERNAME_EXISTS = 'REGISTER_USERNAME_EXISTS',
 	AUTHENTICATE = 'AUTHENTICATE',
@@ -21,6 +22,11 @@ export enum TopActionTypes {
 	AUTHENTICATE_WRONG_USERNAME = 'AUTHENTICATE_WRONG_USERNAME',
 	AUTHENTICATE_WRONG_PWD = 'AUTHENTICATE_WRONG_PWD',
 	CANCEL = 'CANCEL'
+}
+
+
+export interface INavbarToggle {
+	type: TopActionTypes.NAVBAR_TOGGLE;
 }
 
 export interface ILoadTop {
@@ -61,6 +67,7 @@ export interface ICancel {
 
 // Combine the action types with a union (we assume there are more)
 export type TopActions = ILoadTop |
+	INavbarToggle |
 	IRegister |
 	IRegisterUsernameExists |
 	IAuthenticate |
@@ -222,6 +229,19 @@ export const cancelLogin: ActionCreator<any> = () => {
 	};
 };
 
+
+export const navbarToggle: ActionCreator<any> = () => {
+	return (dispatch: Dispatch) => {
+		try {
+			dispatch({
+				type: TopActionTypes.NAVBAR_TOGGLE
+			});
+		}
+		catch (err) {
+			console.error(err);
+		}
+	};
+};
 
 /*
 export function checkAuthentication() {

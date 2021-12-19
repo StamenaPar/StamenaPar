@@ -6,6 +6,7 @@ import {
 import { ITop, ITopState } from './types';
 
 const initialTop: ITop = {
+	navbarOpen: true,
 	isAuthenticated: null,
 	uuid: null
 };
@@ -41,6 +42,7 @@ const myReducer: Reducer<ITopState, TopActions> = (
 			return {
 				...state,
 				top: {
+					navbarOpen: true,
 					isAuthenticated: true,
 					uuid: "placeholder-uuid",
 					auth: {
@@ -62,10 +64,21 @@ const myReducer: Reducer<ITopState, TopActions> = (
 			};
 		}		
 
+		case TopActionTypes.NAVBAR_TOGGLE: {
+			return {
+				...state,
+				top: {
+					...state.top,
+					navbarOpen: !state.top.navbarOpen		
+				}
+			};
+		}	
+
 		case TopActionTypes.AUTHENTICATE: {
 			return {
 				...state,
 				top: {
+					navbarOpen: true,
 					isAuthenticated: true,
 					uuid: "placeholder-uuid",
 					auth: {
@@ -81,6 +94,7 @@ const myReducer: Reducer<ITopState, TopActions> = (
 			return {
 				...state,
 				top: {
+					navbarOpen: true,
 					isAuthenticated: false,
 					uuid: null
 				}

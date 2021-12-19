@@ -12,7 +12,7 @@ interface IProps {
   signOut: () => void
 }
 
-const Nav = ({ isAuthenticated, uuid, signOut }: IProps) => {
+const Navv = ({ isAuthenticated, uuid, signOut }: IProps) => {
 
   let navigate = useNavigate();
 
@@ -71,4 +71,4 @@ const mapStateToProps = (store: IAppState) => ({
 
 export default connect(
   mapStateToProps
-)(Nav);
+)(Navv);

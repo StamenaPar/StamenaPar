@@ -4,7 +4,7 @@
  }
  
  .react-autosuggest__input {
-	width: 540px; /* 240px; */
+	width: 100%; /* 240px; */
 	height: 30px;
 	padding: 10px 20px;
 	font-family: Helvetica, sans-serif;

@@ -89,37 +89,18 @@ ul.entity-columns > li {
  nav a {
 	text-decoration: none;
 	color: #000;
-	border: 2px solid rgb(96, 139, 168);
-	border-radius: 5px;
+	border: 1px solid rgb(96, 139, 168);
+	border-radius: 3px;
 	background-color: rgba(96, 139, 168, .2);
-	padding: 10px;
+	padding: 5px;
 	display: block;
 }
 
 
-/*  Two/Three Columns */
 
-.two-columns {
-	font-size: 1.0em;
-	width: 100%;
-	display: grid;
-	grid-template-columns: 1.2fr 1.2fr;
-	grid-template-rows: 1fr;
-	grid-gap: 15px;
-	grid-template-areas:
-	  "A B";
-}
-
-.a {
-	grid-area: A;
- }
- 
- .b {
-	grid-area: B;
- }
- 
   
  /* and (orientation:landscape) */
+ /*
  @media all and (device-width: 768px) and (device-height: 1024px) {
 	.two-columns {
 	  grid-template-columns: 1fr 1fr;
@@ -141,7 +122,7 @@ ul.entity-columns > li {
 		 "B";
 	}
 }
-
+*/
 
 * {
 	box-sizing: border-box;
@@ -222,6 +203,11 @@ ul.entity-columns > li {
 	cursor: pointer;
 	outline: none;
 	-webkit-appearance: none;
+ }
+
+ .button-add-category {
+	margin: 0;
+	padding: 4px 5px;
  }
 
  
@@ -555,3 +541,13 @@ span.role-title {
 	display: inline; /*inline-block;*/
 	border-radius: 10px;
   }
+
+  div.container-fluid, div.container {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+div.row {
+    margin-right: 0px;
+    margin-left: 0px
+}

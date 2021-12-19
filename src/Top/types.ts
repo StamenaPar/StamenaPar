@@ -23,6 +23,7 @@ export interface IAuthJson extends Omit<IAuth, 'who' | 'authenticated' | 'visite
 // Top
 // -----
 export interface ITop {
+	navbarOpen: boolean,
 	isAuthenticated: boolean | null;
 	uuid: string | null;
 	authError?: string,

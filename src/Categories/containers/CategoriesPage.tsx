@@ -30,7 +30,7 @@ interface IProps {
 
 // Grab the categories from the store and make them available on props
 const mapStateToProps = (store: IAppState, ownProps: IProps ) => {
-	const {categoriesState, tagState} = store;
+	const {categoriesState, tagState, topState} = store;
 	const { 
 		categories,
 		categoryQuestions,
@@ -50,7 +50,8 @@ const mapStateToProps = (store: IAppState, ownProps: IProps ) => {
 		canEdit: ownProps.canEdit,
 		isDetail,
 		tagOptions: tagState.tags.map(f => ({ label: f.name, value: f.tagId, color: f.color })),
-		who: store.topState.top.auth!.who
+		who: topState.top.auth!.who,
+		navbarOpen: topState.top.navbarOpen
 	};
 };
 

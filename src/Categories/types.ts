@@ -48,8 +48,6 @@ export interface ICategoryJson extends Omit<ICategory, 'created'| 'questions'> {
 	created: string
 }
 
-
-
 export const initialQuestion: IQuestion = {
 	categoryId: 0,
 	questionId: 0,
@@ -72,6 +70,7 @@ export const initialQuestion: IQuestion = {
 	categoryIdEditing: number,
 	canEdit: boolean,
 	who: IUser,
+	navbarOpen: boolean,
 	onSelectQuestion: (categoryId: number, questionId: number) => IQuestion;
 	add: (categoryId: number, text: string, canEdit?: boolean) => void;
 	edit: (categoryId: number, questionId: number) => void;

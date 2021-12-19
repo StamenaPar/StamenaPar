@@ -229,11 +229,20 @@ const myReducer: Reducer<ICategoriesState, QuestionActions> = (
 
 		case QuestionActionTypes.ADD_CATEGORY: {
 			// const group =  state.categories.find(g => g.categoryId === action.categoryId);
-			let categoryId = Math.max(...state.categories.map(g => g.categoryId)) + 1
+			const { categoryQuestions } = state;
+			let categoryId = Math.max(...state.categories.map(g => g.categoryId)) + 1;
+			const categoryState: ICategoryState = {
+				questions: []
+			}
+			categoryQuestions.set(categoryId, categoryState)
 			return {
 				...state,
 				categoryIdEditing: categoryId,
-				categories: [...state.categories, { ...initialCategory, title: "New Section", categoryId }]
+				categories: [...state.categories, { 
+					...initialCategory,
+					title: "New Category",
+					categoryId 
+				}]
 			};
 		}
 
