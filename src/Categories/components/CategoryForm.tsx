@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup'
-import { IQuestion, IQuestionAnswer, IQuestionFormProps } from '../types';
+import { ICategoryFormProps } from '../types';
 import { IAnswer } from '../../Answers/types';
 
-import QuestionAnswers from './QuestionAnswers'
 import { Select } from '../../common/Select';
 import { COLORS } from '../../formik/theme';
 //import { MultiSelect } from '../../common/MultiSelect';
@@ -12,26 +11,24 @@ import { IOption } from '../../common/types';
 import UserName from '../../common/containers/UserName';
 //import { number } from 'yup/lib/locale';
 
-import { sourceOptions } from '../sourceOptions'
-import { statusOptions } from '../statusOptions'
 
+const Form: React.FC<ICategoryFormProps> = (props: ICategoryFormProps) => {
 
-const Form: React.FC<IQuestionFormProps> = (props: IQuestionFormProps) => {
+  const category = props.category!;
+  const { categoryId, title, questions, isExpanded, createdBy, created } = category;
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      categoryId: props.question.categoryId,
-      questionId: props.question.questionId,
-      text: props.question.text,
-      source: props.question.source,
-      status: props.question.status,
-      answers: props.question.answers,
-      createdBy: props.question.createdBy,
-      created: props.question.created
+      categoryId,
+      title,
+      questions,
+      isExpanded,
+      createdBy,
+      created
     },
     validationSchema: Yup.object({
-      text: Yup.string()
+      title: Yup.string()
         .max(150, 'Must be 150 characters or less')
         .required('Required'),
       /*answers: Yup.string()
@@ -54,94 +51,43 @@ const Form: React.FC<IQuestionFormProps> = (props: IQuestionFormProps) => {
     <>
       <form onSubmit={formik.handleSubmit}>
       
-        <label className="id" htmlFor="questionId">QuestionId:</label>
+        <label className="id" htmlFor="categoryId">CategoryId:</label>
         {/* <input
-          id="questionId"
-          name="questionId"
+          id="categoryId"
+          name="categoryId"
           type="text"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          value={formik.values.questionId}
+          value={formik.values.categoryId}
           disabled
           style={{ width: '50px' }}
         />
-        {formik.touched.questionId && formik.errors.questionId ? (
-          <div>{formik.errors.questionId}</div>
+        {formik.touched.categoryId && formik.errors.categoryId ? (
+          <div>{formik.errors.categoryId}</div>
         ) : null} */}
-        <span id="questionId">{formik.values.questionId}</span>
-
-        <label htmlFor="categoryId">Category</label>
-        <Select
-          id="categoryId"
-          name="categoryId"
-          options={props.categoryOptions}
-          //onChange={formik.handleChange}
-          onChange={(e, value) => {
-            formik.setFieldValue("categoryId", value);
-            if (isEdit()) formik.submitForm();
-          }}
-          value={formik.values.categoryId}
-        />
-
-        <label htmlFor="text">Name</label>
+        <span id="categoryId">{formik.values.categoryId}</span>
+        
+        <label htmlFor="title">Title</label>
         <textarea
-          id="text"
-          name="text"
+          id="title"
+          name="title"
           onChange={formik.handleChange}
           //onBlur={formik.handleBlur}
           onBlur={(e: React.FormEvent<HTMLTextAreaElement>): void => {
-            if (isEdit() && formik.initialValues.text !== formik.values.text)
+            if (isEdit() && formik.initialValues.title !== formik.values.title)
               formik.submitForm();
           }}
-          value={formik.values.text}
+          value={formik.values.title}
           style={{ width: '100%' }}
           rows={2}
         />
-        {formik.touched.text && formik.errors.text ? (
-          <div>{formik.errors.text}</div>
+        {formik.touched.title && formik.errors.title ? (
+          <div>{formik.errors.title}</div>
         ) : null}
 
-        <label htmlFor="source">Source</label>
-        <Select
-          id="source"
-          name="source"
-          options={sourceOptions}
-          // onChange={formik.handleChange}
-          onChange={(e, value) => {
-            formik.setFieldValue("source", value)
-            if (isEdit()) formik.submitForm();
-          }}
-          value={formik.values.source}
-        />
-
-        <br />
-        <QuestionAnswers
-          question={props.question}
-          questionAnswers={props.questionAnswers}
-          answers={props.answers}
-          canEdit={props.canEdit}
-          formMode={props.formMode}
-          selectQuestionAnswer={props.selectQuestionAnswer}
-          copyQuestionAnswer={props.copyQuestionAnswer}
-          removeQuestionAnswer={props.removeQuestionAnswer}
-          assignQuestionAnswer={props.assignQuestionAnswer}
-          setIsDetail={props.setIsDetail}
-        />
         <br />
 
-        <label htmlFor="status">Status</label>
-        <Select
-          id="status"
-          name="status"
-          options={statusOptions}
-          //onChange={formik.handleChange}
-          onChange={(e, value) => {
-            formik.setFieldValue("status", value)
-            if (isEdit()) formik.submitForm();
-          }}
-          value={formik.values.status}
-        />
-
+   
         <label className="id" htmlFor="createdBy">Created by:</label>
         <UserName id={formik.values.createdBy} />
 			  <br/>
@@ -245,7 +191,7 @@ const Form: React.FC<IQuestionFormProps> = (props: IQuestionFormProps) => {
 
 const color = 'blue';
 
-export const QuestionForm: React.FC<IQuestionFormProps> = (props: IQuestionFormProps) => {
+export const CategoryForm: React.FC<ICategoryFormProps> = (props: ICategoryFormProps) => {
   return (
     <div style={{ height: '100%' }} className="formik-example formik-example--blue">
       <div

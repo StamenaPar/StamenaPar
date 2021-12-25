@@ -43,7 +43,7 @@ export interface ICategory {
 	created: Date
 }
 
-export interface ICategoryJson extends Omit<ICategory, 'created'| 'questions'> {
+export interface ICategoryJson extends Omit<ICategory, 'created' | 'questions'> {
 	questions: IQuestionJson[],
 	created: string
 }
@@ -60,11 +60,12 @@ export const initialQuestion: IQuestion = {
 	created: new Date()
  };
 
- export interface IComponentProps {
+ export interface ICategoriesProps {
 	categories: ICategory[];
 	categoryQuestions: Map<number, ICategoryState>,
 	categoryOptions: IOption<number>[],
-	question?: IQuestion;
+	category: ICategory | undefined;
+	question: IQuestion | undefined;
 	lastAnswer?: IAnswer;
 	formMode: string,
 	categoryIdEditing: number,
@@ -76,6 +77,7 @@ export const initialQuestion: IQuestion = {
 	edit: (categoryId: number, questionId: number) => void;
 	remove: (categoryId: number, questionId: number) => void;
 	// groups
+	onSelectCategory: (categoryId: number) => ICategory;
 	addCategory: () => void;
 	toggleCategory: (categoryId: number) => void;
 	editCategory: (categoryId: number) => void;
@@ -94,9 +96,11 @@ export interface ICategoryState {
 // Define the Question State
 export interface ICategoriesState {
 	readonly categories: ICategory[];
-	categoryQuestions: Map<number, ICategoryState>,
+	readonly category: ICategory | undefined;
 	readonly question: IQuestion | undefined;
+	categoryCopy?: ICategory;
 	questionCopy?: IQuestion;
+	categoryQuestions: Map<number, ICategoryState>,
 	categoryOptions: IOption<number>[];
 	loading: boolean,
 	formMode: string;
@@ -105,7 +109,7 @@ export interface ICategoriesState {
 }
 
 
-export interface IFormProps {
+export interface IQuestionFormProps {
 	question: IQuestion;
 	questionAnswers: IQuestionAnswer[];
 	answers: IAnswer[];
@@ -120,3 +124,13 @@ export interface IFormProps {
 	setIsDetail: (isDetail: boolean) => void;
 	categoryOptions: IOption<number>[];
   }
+
+  export interface ICategoryFormProps {
+	category: ICategory | undefined;
+	formMode: string;
+	canEdit: boolean,
+	cancel: () => void;
+	saveForm: (category: ICategory, formMode: string) => void;
+	setIsDetail: (isDetail: boolean) => void;
+  }
+

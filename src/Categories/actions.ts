@@ -59,12 +59,14 @@ export enum QuestionActionTypes {
 	UPDATE_QUESTION = 'UPDATE_QUESTION',
 	CANCEL_QUESTION = 'CANCEL_QUESTION',
 	// groups
+	GET_CATEGORY = 'GET_CATEGORY',
 	ADD_CATEGORY = 'ADD_CATEGORY',
 	TOGGLE_CATEGORY = 'EXPAND_CATEGORY',
 	EDIT_CATEGORY = 'EDIT_CATEGORY',
 	REMOVE_CATEGORY = 'REMOVE_CATEGORY',
 	STORE_CATEGORY = 'STORE_CATEGORY',
 	UPDATE_CATEGORY = 'UPDATE_CATEGORY',
+	CANCEL_CATEGORY = 'CANCEL_CATEGORY',
 	// question answers
 	REMOVE_QUESTION_ANSWER = 'REMOVE_QUESTION_ANSWER',
 	ASSIGN_QUESTION_ANSWER = 'ASSIGN_QUESTION_ANSWER',
@@ -122,10 +124,21 @@ export interface ICancel {
 }
 
 // group
+
+export interface IGetCategory {
+	type: QuestionActionTypes.GET_CATEGORY;
+	categoryId: number
+}
+
 export interface IAddCategory {
 	type: QuestionActionTypes.ADD_CATEGORY;
 	//categoryId: number
 }
+
+export interface ICancelCategory {
+	type: QuestionActionTypes.CANCEL_CATEGORY;
+}
+
 
 export interface IToggleCategory {
 	type: QuestionActionTypes.TOGGLE_CATEGORY;
@@ -151,6 +164,11 @@ export interface IUpdateCategory {
 	type: QuestionActionTypes.UPDATE_CATEGORY;
 	category: ICategory;
 }
+
+export interface ICancelCategory {
+	type: QuestionActionTypes.CANCEL_CATEGORY;
+}
+
 
 // question answers
 export interface IRemoveQuestionAnswer {
@@ -184,7 +202,7 @@ export interface IAddAndAssignNewAnswer {
 
 // Combine the action types with a union (we assume there are more)
 export type QuestionActions = ILoad | IGet | IAdd | IEdit | IRemove | IStore | IUpdate | ICancel |
-	IAddCategory | IToggleCategory | IEditCategory | IRemoveCategory | IStoreCategory | IUpdateCategory |
+	IGetCategory | IAddCategory | IToggleCategory | IEditCategory | IRemoveCategory | IStoreCategory | IUpdateCategory | ICancelCategory |
 	IRemoveQuestionAnswer | IAssignQuestionAnswer |
 	ISetIsDetail |
 	IAddAndAssignNewAnswer;
@@ -524,6 +542,21 @@ export const cancelQuestion: ActionCreator<any> = () => {
 	};
 };
 
+export const getCategory: ActionCreator<
+	ThunkAction<Promise<any>, ICategoriesState, string, IGet>
+> = (categoryId: number) => {
+	return async (dispatch: Dispatch) => {
+		try {
+			dispatch({
+				type: QuestionActionTypes.GET_CATEGORY,
+				categoryId
+			});
+		} catch (err) {
+			console.error(err);
+		}
+	};
+};
+
 
 export const addCategory: ActionCreator<
 	ThunkAction<Promise<any>, ICategoriesState, null, IAddCategory>
@@ -621,6 +654,20 @@ export const updateCategory: ActionCreator<
 		}
 	};
 };
+
+export const cancelCategory: ActionCreator<any> = () => {
+	return (dispatch: Dispatch) => {
+		try {
+			dispatch({
+				type: QuestionActionTypes.CANCEL_CATEGORY
+			});
+		}
+		catch (err) {
+			console.error(err);
+		}
+	};
+};
+
 
 export const addAndAssignNewAnswer: ActionCreator<
 	ThunkAction<Promise<any>, IAppState, null, IStore>

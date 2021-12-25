@@ -3,7 +3,7 @@ import { useRef } from 'react'
 import { faPlus, faWindowClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IComponentProps } from '../types'
+import { ICategoriesProps } from '../types'
 
 
 import { AutoSuggest } from '../../components/AutoSuggest';
@@ -15,13 +15,12 @@ import { DetailView } from './DetailView';
 
 import { COLORS } from '../../formik/theme';
 import { updateCategory } from '../actions';
-import { Col, Container, Row } from 'react-bootstrap';
 const color = 'blue';
 
-const CategoryList: React.FC<IComponentProps> = (props: IComponentProps) => {
+const CategoryList: React.FC<ICategoriesProps> = (props: ICategoriesProps) => {
 
 	const { categories, categoryQuestions, question,
-		formMode, categoryIdEditing, onSelectQuestion, add, edit, remove, canEdit,
+		formMode, categoryIdEditing, onSelectCategory, onSelectQuestion, add, edit, remove, canEdit,
 		addCategory, toggleCategory, editCategory, removeCategory, storeCategory, updateCategory,
 		addAndAssignNewAnswer,
 		who } = props;
@@ -60,7 +59,9 @@ const CategoryList: React.FC<IComponentProps> = (props: IComponentProps) => {
 							}
 							{categoryIdEditing !== categoryId && (
 								<CategoryRow
+									key={category.categoryId}
 									category={category}
+									onSelectCategory={onSelectCategory}
 									toggleCategory={toggleCategory}
 									editCategory={editCategory}
 									removeCategory={removeCategory}

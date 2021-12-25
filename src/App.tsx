@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 
 
 import { HashRouter as Router, Route, Routes } from 'react-router-dom' // useRouteMatch
@@ -17,9 +17,12 @@ import { authenticate, unAuthenticate, TopActions, navbarToggle } from './Top/ac
 import LoginForm from './Top/containers/LoginForm';
 import Landing from './components/Landing';
 import { ILogin, IAuth } from './Top/types';
-import { Button, Col, Collapse, Container, Form, FormControl, Nav, Row } from 'react-bootstrap';
 import Navig from './Navig';
 import Navv from './Navv';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleDoubleLeft, faAngleDoubleRight, faRegistered } from '@fortawesome/free-solid-svg-icons';
+import { Button, Col, Collapse, Container, Form, FormControl, Nav, Row } from 'react-bootstrap';
+import Header from './Header';
 
 
 interface IProps {
@@ -35,8 +38,13 @@ interface IProps {
 const App = ({ navbarOpen, isAuthenticated, uuid, auth, toggleNavbar, checkAuthentication, signOut }: IProps) => {
 
 	//const [navbarOpen, setNavbarOpen] = useState(true);
+	let main: null | HTMLDivElement = null;
 
-	React.useEffect(() => {
+	const [open, setOpen] = useState(navbarOpen);
+	const [mainMd, setMainMd] = useState(9);
+	const [mainLg, setMainLg] = useState(10);
+
+	useEffect(() => {
 		const login = {
 			userName: 'Jack',
 			pwd: 'Daniels'
@@ -44,62 +52,64 @@ const App = ({ navbarOpen, isAuthenticated, uuid, auth, toggleNavbar, checkAuthe
 		checkAuthentication(login);
 	}, []);
 
-	const app = isAuthenticated !== null
-		? (
-			<Router>
+	const signIn = () => {
+		const login = {
+			userName: 'Jack',
+			pwd: 'Daniels'
+		}
+		checkAuthentication(login);
+	}
 
-				{/* <Container className="vh-100 d-flex flex-column"> min-vh-100 */}
-				<Container>
-					{/* Columns start at 50% wide on mobile and bump up to 33.3% wide on desktop */}
-					<Row style={{ border: '1px solid silver' }}>
-						<Col xs={6} md={2}>
-						</Col>
-						<Col xs={6} md={5}>
-							Support Knowledge
-						</Col>
-						<Col xs={6} md={5}>
-							<Row>
-								<Col>Notifications</Col>
-								<Col>Help</Col>
-								<Col>{auth?.who.userName}</Col>
-							</Row>
-						</Col>
-					</Row>
+	const register = () => {
+		
+	}
 
-					<Row style={{ border: '1px solid silver' }}>
-						<Col sm={8}>
-							{/* <Navigator /> */}
-							<Button
-								onClick={() => toggleNavbar()}
-								aria-controls="example-collapse-text"
-								aria-expanded={navbarOpen}
-							>
-								Open/Close
-							</Button>
-						</Col>
-						<Col sm={4} className="justify-content-center">
-							<Form className="d-flex">
-								<FormControl
-									type="search"
-									placeholder="Search"
-									className="me-2"
-									aria-label="Search"
-								/>
-								<Button variant="outline-success">Search</Button>
-							</Form>
-						</Col>
-					</Row>
+	// null is the third state false/true/null in reducer
+	const app = //isAuthenticated !== null ? (  
+		<Router>
+			<Header open={open} setOpen={setOpen} register={register} signIn={signIn} signOut={signOut} />
 
-					{/* Columns are always 50% wide, on mobile and desktop */}
-					{/* <Row className="h-100"> */}
-					<Row style={{ border: '0px solid silver' }}>
-						<Collapse in={navbarOpen} dimension="width">
-							<Col id="example-collapse-text" lg={2} md={2} style={{ border: '1px solid silver' }}>
-								{/* <Navv  signOut={signOut}/> */}
-								<Navig signOut={signOut} />
-							</Col>
-						</Collapse>
-						<Col lg={navbarOpen ? 10 : 12} md={navbarOpen ? 10 : 12} style={{ border: '1px solid silver' }}>
+			<Container fluid>
+				<Row>
+					<Collapse
+						in={open}
+						dimension="width"
+						onEnter={() => { console.log('onEnter'); setMainMd(9); setMainLg(10) }}
+						onEntering={() => { console.log('onEntering'); }}
+						onEntered={() => { console.log('onEntered'); }}
+						onExit={() => { console.log('onExit'); }}
+						onExiting={() => { console.log('onExiting'); }}
+						onExited={() => { console.log('onExited'); setMainMd(12); setMainLg(12) }}
+					>
+						{/* <Col id="example-collapse-text" className="position-sticky pt-3"> */}
+						{/* <Col id="example-collapse-text" className="position-sticky p-0 m-0 col-md-3 ms-sm-auto col-lg-2"> */}
+						<Col
+							id="example-collapse-text"
+							md={3}
+							lg={2}
+							className="p-3 m-3 ms-sm-auto sidebar"
+							style={{ border: '1px solid silver', backgroundColor: 'yellow' }}
+						>
+							<Navig signOut={signOut} />
+						</Col>
+					</Collapse>
+
+					<Col id="main" md={mainMd} lg={mainLg} className="ms-sm-auto px-md-4">
+						<div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+							<h1 className="h2">Dashboard</h1>
+							<div className="btn-toolbar mb-2 mb-md-0">
+								<div className="btn-group me-2">
+									<button type="button" className="btn btn-sm btn-outline-secondary">Share</button>
+									<button type="button" className="btn btn-sm btn-outline-secondary">Export</button>
+								</div>
+								<button type="button" className="btn btn-sm btn-outline-secondary dropdown-toggle">
+									<span data-feather="calendar"></span>
+									This week
+								</button>
+							</div>
+						</div>
+
+						<div style={{ border: '1px solid navy' }}>
 							<Routes>
 								<Route path="/" element={<Landing />} />
 								<Route path="/sign-in" element={
@@ -113,23 +123,18 @@ const App = ({ navbarOpen, isAuthenticated, uuid, auth, toggleNavbar, checkAuthe
 								<Route path="/answers/:slug" element={<AnswersPage />} />
 								<Route path="/users/:slug" element={<UsersPage canEdit={true} />} />
 							</Routes>
-						</Col>
-					</Row>
+						</div>
 
+					</Col>
+				</Row>
 
-					{/* Columns are always 50% wide, on mobile and desktop */}
-					<Row style={{ border: '1px solid silver' }}>
-						<Col xs={6}>xs=6</Col>
-						<Col xs={6}>xs=6</Col>
-					</Row>
-				</Container>);
+			</Container>
 
-
-			</Router>
-		)
-		: (
-			null
-		);
+		</Router>
+	// )
+	// : (
+	// 	null
+	// );
 
 	return (
 		<div className="App">

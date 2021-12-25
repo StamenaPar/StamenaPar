@@ -1,14 +1,15 @@
 import * as React from "react";
-import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { Link } from "react-router-dom";
 import { IAppState } from "./store/Store";
 
-import { Button, Container, Row, Col, Navbar, Nav, NavLink, Offcanvas, NavDropdown, Form, FormControl } from 'react-bootstrap'
-
 import logo from './logo.svg'
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faQuestion, faHome, faPlus, faSurprise, faUser, faUserFriends, faSignOutAlt, faSignInAlt, faRegistered, faAnchor } from '@fortawesome/free-solid-svg-icons'
+
 
 interface IProps {
   isAuthenticated: boolean | null;
@@ -29,77 +30,106 @@ function Navig({ isAuthenticated, uuid, signOut }: IProps) {
            <Navbar.Toggle aria-controls="offcanvasNavbar" /> 
          <Nav className="justify-content-end flex-grow-1 pe-3"> */}
 
-         /// defaultActiveKey="/questions"
+  /// defaultActiveKey="/questions"
   return (
-    <Navbar bg="light" expand={false}>
+    <div className="position-sticky pt-3">
+      {isAuthenticated ? (
+        <>
+          <ul className="nav flex-column">
+            <li className="nav-item">
+              <a className="nav-link active" aria-current="page" href="#/supporter/promo">
+                <FontAwesomeIcon icon={faSurprise} color='lightblue' />
+                {' '}Supporter
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link active" aria-current="page" href="#/questions">
+                <FontAwesomeIcon icon={faQuestion} color='lightblue' />
+                {' '}Questions
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="#/answers/pera">
+                <FontAwesomeIcon icon={faAnchor} color='lightblue' />
+                {' '}Answers
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="#/users/2">
+                <FontAwesomeIcon icon={faUserFriends} color='lightblue' />
+                {' '}Users
+              </a>
+            </li>
+            {/* <li className="nav-item">
+              <a className="nav-link" href="#" onClick={() => otkaciMe()}>
+                <FontAwesomeIcon icon={faSignOutAlt} color='lightblue' />
+                {' '}Sign out
+              </a>
+            </li> */}
+          </ul>
 
-      <Container fluid >
-        {isAuthenticated ? (
-          <Nav  className="flex-column">
-            <Nav.Link href="#/supporter/promo">Supporter</Nav.Link>
-            <Nav.Link href="#/questions">Questions</Nav.Link>
-            <Nav.Link href="#/answers/pera">Answers</Nav.Link>
-            <Nav.Link href="#/users/2">Users</Nav.Link>
-            <Nav.Link onClick={() => otkaciMe()} className="justify-content-end">
-              Sign out
-            </Nav.Link>
-            <NavDropdown title="Dropdown" id="offcanvasNavbarDropdown">
-              <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action4">Another action</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action5">
-                Something else here
-              </NavDropdown.Item>
-            </NavDropdown>
-            {/* <Nav.Link eventKey="disabled" disabled>
-              Disabled
-            </Nav.Link>
-            <Nav.Link eventKey="imaged">
-              <Navbar.Brand href="#">
-                <img
-                  alt=""
-                  src={logo}
-                  width="30"
-                  height="30"
-                  className="d-inline-block align-top"
-                />{' '} Questions
-              </Navbar.Brand>
-            </Nav.Link> */}
-          </Nav>
-        )
-          : (
-            <Nav defaultActiveKey="#/about" className="flex-column">
-              <Nav.Link href="#/landing">Landing</Nav.Link>
-              <Nav.Link href="#/about">About</Nav.Link>
-              <Nav.Link href="#/register">Register</Nav.Link>
-              <Nav.Link href="#/sign-in">Sign In</Nav.Link>
-              <NavDropdown title="Dropdown" id="offcanvasNavbarDropdown">
-                <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
-                <NavDropdown.Item href="#action4">Another action</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action5">
-                  Something else here
-                </NavDropdown.Item>
-              </NavDropdown>
-              <Nav.Link eventKey="disabled" disabled>
-                Disabled
-              </Nav.Link>
-              {/* <Nav.Link eventKey="imaged">
-                <Navbar.Brand href="#">
-                  <img
-                    alt=""
-                    src={logo}
-                    width="30"
-                    height="30"
-                    className="d-inline-block align-top"
-                  />{' '} Questions
-                </Navbar.Brand>
-              </Nav.Link> */}
-            </Nav>
-          )}
-      </Container>
+          <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>Saved reports</span>
+            <a className="link-secondary" href="#" aria-label="Add a new report">
+              <FontAwesomeIcon icon={faPlus} />
+            </a>
+          </h6>
+          <ul className="nav flex-column mb-2">
+            <li className="nav-item">
+              <a className="nav-link" href="#">
+                <FontAwesomeIcon icon={faHome} color='lightblue' />
+                {' '}Current month
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="#">
+                <FontAwesomeIcon icon={faHome} color='lightblue' />
+                {' '}Last quarter
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="#">
+                <FontAwesomeIcon icon={faHome} color='lightblue' />
+                {' '}Social engagement
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="#">
+              {' '}Year-end sale
+              </a>
+            </li>
+          </ul>
+        </>
+      ) : (
+        <ul className="nav flex-column">
+          <li className="nav-item">
+            <a className="nav-link active" aria-current="page" href="#/landing">
+              <FontAwesomeIcon icon={faSurprise} color='lightblue' />
+              {' '}Landing
+            </a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link active" aria-current="page" href="#/About">
+              <FontAwesomeIcon icon={faQuestion} color='lightblue' />
+              {' '}About
+            </a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link" href="#/Register">
+              <FontAwesomeIcon icon={faRegistered} color='lightblue' />
+              {' '}Register
+            </a>
+          </li>
+          {/* <li className="nav-item">
+            <a className="nav-link" href="#" onClick={() => otkaciMe()}>
+              <FontAwesomeIcon icon={faSignInAlt} color='lightblue' />
+              {' '}Sign in
+            </a>
+          </li> */}
+        </ul>
+      )}
+    </div>
 
-    </Navbar>
   );
 }
 

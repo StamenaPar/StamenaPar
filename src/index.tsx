@@ -12,29 +12,27 @@ import { loadCategories } from './Categories/actions';
 import { getAllAnswers } from './Answers/actions';
 
 import 'bootstrap/dist/css/bootstrap.css'
-import './formik/formikStyles.css';
+// import './formik/formikStyles.css';
 import './index.css';
 import './App.css';
-
-import AnswersPage from './Answers/containers/Page'
-import containers from './Categories/containers/CategoriesPage'
+import './dashboard.css';
 
 import './formik/formikStyles.css';
 import { getAllUsers, storeUser } from './user/actions';
 import { getAllTags } from './roleTags/actions';
-import UsersPage from './user/containers/UsersPage';
-import { authenticate, loadTop } from './Top/actions';
+import { loadTop } from './Top/actions';
 import { IUser } from './user/types';
-import LoginForm from './Top/containers/LoginForm';
 import App from './App';
+import { coolColors } from './cool-colors';
 
 interface IProps {
 	store: Store<IAppState>;
 }
 
+// coolColors();
 
 // Generate the store
-// localStorage.clear(); // !!!!!!!!!!!!
+localStorage.clear(); // !!!!!!!!!!!!
 
 const store = configureStore();
 store.dispatch(loadCategories());

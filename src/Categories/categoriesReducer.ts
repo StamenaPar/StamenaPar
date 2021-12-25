@@ -37,6 +37,7 @@ export const initialCategory: ICategory = {
 // Define the initial state
 export const initialCategoriesState: ICategoriesState = {
 	categories: [],
+	category: undefined,
 	categoryQuestions: new Map<number, ICategoryState>(),
 	question: undefined,
 	categoryOptions: [],
@@ -97,6 +98,7 @@ const myReducer: Reducer<ICategoriesState, QuestionActions> = (
 			const question = questions.find(q => q.questionId === questionId);
 			return {
 				...state,
+				category: undefined,
 				question
 			};
 		}
@@ -108,6 +110,7 @@ const myReducer: Reducer<ICategoriesState, QuestionActions> = (
 			return {
 				...state,
 				formMode: 'add',
+				category: undefined,
 				question: {
 					...initialQuestion,
 					createdBy: action.createdBy,
@@ -181,7 +184,8 @@ const myReducer: Reducer<ICategoriesState, QuestionActions> = (
 		case QuestionActionTypes.CANCEL_QUESTION: {
 			return {
 				...state,
-				formMode: 'display'
+				formMode: 'display',
+				question: undefined
 			};
 		}
 
@@ -226,6 +230,17 @@ const myReducer: Reducer<ICategoriesState, QuestionActions> = (
 
 		///////////////////////////////////////////////////////////////////////////////////
 		// groups
+		case QuestionActionTypes.GET_CATEGORY: {
+			const { categoryId } = action;
+			//const questions = getQuestions(categoryId, state)
+			//const question = questions.find(q => q.questionId === questionId);
+			const category = state.categories.find(g => g.categoryId === categoryId);
+			return {
+				...state,
+				category,
+				question: undefined
+			};
+		}
 
 		case QuestionActionTypes.ADD_CATEGORY: {
 			// const group =  state.categories.find(g => g.categoryId === action.categoryId);
@@ -237,12 +252,14 @@ const myReducer: Reducer<ICategoriesState, QuestionActions> = (
 			categoryQuestions.set(categoryId, categoryState)
 			return {
 				...state,
+				formMode: 'add',
 				categoryIdEditing: categoryId,
-				categories: [...state.categories, { 
+				category: { 
 					...initialCategory,
 					title: "New Category",
 					categoryId 
-				}]
+				},
+				question: undefined
 			};
 		}
 
@@ -259,10 +276,11 @@ const myReducer: Reducer<ICategoriesState, QuestionActions> = (
 		}
 
 		case QuestionActionTypes.EDIT_CATEGORY: {
-			const group = state.categories.find(g => g.categoryId === action.categoryId)
+			const category = state.categories.find(g => g.categoryId === action.categoryId)!
 			return {
 				...state,
-				categoryIdEditing: group!.categoryId
+				categoryCopy: { ...category },
+				categoryIdEditing: category.categoryId
 			};
 		}
 
@@ -277,6 +295,7 @@ const myReducer: Reducer<ICategoriesState, QuestionActions> = (
 			category.questions = [];
 			return {
 				...state,
+				formMode: 'edit',
 				categoryIdEditing: -1,
 				categories: [...state.categories, category],
 				categoryQuestions
@@ -286,16 +305,25 @@ const myReducer: Reducer<ICategoriesState, QuestionActions> = (
 		case QuestionActionTypes.UPDATE_CATEGORY: {
 			// const group = state.categories.find(g => g.categoryId === action.question.categoryId);
 			const { category } = action;
+			const { categoryId, title } = category;
+			let { categoryCopy } = state;
 			return {
 				...state,
 				categoryIdEditing: -1,
-				categories: state.categories.map(g => g.categoryId !== category.categoryId
+				categories: state.categories.map(g => g.categoryId !== categoryId
 					? g
-					: { ...g, title: category.title }
+					: { ...g, title }
 				)
 			}
 		}
 
+		case QuestionActionTypes.CANCEL_CATEGORY: {
+			return {
+				...state,
+				formMode: 'display',
+				category: undefined
+			};
+		}
 
 		case QuestionActionTypes.REMOVE_CATEGORY: {
 			return {

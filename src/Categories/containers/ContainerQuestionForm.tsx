@@ -44,7 +44,7 @@ interface IProps {
 // Grab the categories from the store and make them available on props
 const mapStateToProps = (store: IAppState, ownProps: IProps ) => {
 	const {categoriesState, answerState } = store;
-	const { question, categoryOptions, formMode } = categoriesState; 
+	const { category, question, categoryOptions, formMode } = categoriesState; 
 	const { answers } = answerState;
 	return {
 		categoryOptions,
