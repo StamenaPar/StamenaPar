@@ -48,7 +48,7 @@ function Navig({ isAuthenticated, uuid, signOut }: IProps) {
               <NavDropdown.Item href="#action4">Another action</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="#action5">
-                Something else here
+                Something else
               </NavDropdown.Item>
             </NavDropdown>
             {/* <Nav.Link eventKey="disabled" disabled>
@@ -78,7 +78,7 @@ function Navig({ isAuthenticated, uuid, signOut }: IProps) {
                 <NavDropdown.Item href="#action4">Another action</NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="#action5">
-                  Something else here
+                  Something else
                 </NavDropdown.Item>
               </NavDropdown>
               <Nav.Link eventKey="disabled" disabled>

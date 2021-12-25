@@ -8,17 +8,18 @@ import { faWindowClose, faEdit, faCaretRight, faCaretDown } from '@fortawesome/f
 import { ICategory } from '../types';
 
 
-interface IQuestionRowProps {
+interface ICategoryRowProps {
 	category: ICategory;
 	toggleCategory: (categoryId: number) => void;
 	editCategory: (categoryId: number) => void;
 	removeCategory: (categoryId: number) => void;
+	onSelectCategory: (categoryId: number) => void;
 }
 
-const CategoryRow: React.FC<IQuestionRowProps> = (props: IQuestionRowProps) => {
+const CategoryRow: React.FC<ICategoryRowProps> = (props: ICategoryRowProps) => {
 
 	const [hoverRef, hoverProps] = useHover();
-	const { category, toggleCategory, editCategory, removeCategory } = props;
+	const { category, toggleCategory, editCategory, removeCategory, onSelectCategory } = props;
 	const {categoryId, title, questions: categories, isExpanded} = category;
 
 	return (
@@ -31,7 +32,7 @@ const CategoryRow: React.FC<IQuestionRowProps> = (props: IQuestionRowProps) => {
 			>
 				<FontAwesomeIcon icon={isExpanded?faCaretDown:faCaretRight} color='orange' size='lg' />
 			</button>
-			<span className='question-group-title'>{title}</span>
+			<span className='question-group-title' onClick={() => onSelectCategory(categoryId)}>{title}</span>
 			{hoverProps.isHovered &&
 				<button className="button-edit" title="Edit Section" onClick={() => editCategory(categoryId)}>
 					<FontAwesomeIcon icon={faEdit} color='lightblue' />

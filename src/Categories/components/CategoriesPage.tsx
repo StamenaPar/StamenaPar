@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { useRef } from 'react'
 
-import { IComponentProps } from '../types'
+import { ICategoriesProps } from '../types'
 
 
 import { AutoSuggest } from '../../components/AutoSuggest';
+import ContainerCategoryForm from '../containers/ContainerCategoryForm';
 import ContainerQuestionForm from '../containers/ContainerQuestionForm';
 import QuestionRow from './QuestionRow';
 import CategoryRow from './CategoryRow';
@@ -21,11 +22,11 @@ type SupportParams = {
 	tekst: string;
 };
 
-const Page: React.FC<IComponentProps> = (props: IComponentProps) => {
+const Page: React.FC<ICategoriesProps> = (props: ICategoriesProps) => {
 
 	let { tekst } = useParams<SupportParams>();
-	const { categories, categoryQuestions, question,
-		formMode, categoryIdEditing, onSelectQuestion, add, edit, remove, canEdit,
+	const { categories, categoryQuestions, category, question,
+		formMode, categoryIdEditing, onSelectCategory, onSelectQuestion, add, edit, remove, canEdit,
 		addCategory, toggleCategory, editCategory, removeCategory, storeCategory, updateCategory,
 		addAndAssignNewAnswer,
 		who } = props;
@@ -71,6 +72,16 @@ const Page: React.FC<IComponentProps> = (props: IComponentProps) => {
 									}
 								</div>
 							}
+							{categories && category &&
+								<div style={{ border: '1px solid silver', borderRadius: '5px', padding: '5px 5px 15px 5px', background: COLORS[color][5] }}>
+									<h4 style={{ marginTop: 0, color: 'white' }}>Category</h4>
+									{formMode === 'display' ?
+										<ContainerCategoryForm canEdit={false} />
+										:
+										<ContainerCategoryForm canEdit={canEdit} />
+									}
+								</div>
+							}							
 						</div>
 					</Col>
 				</Row>

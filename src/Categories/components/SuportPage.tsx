@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useParams } from 'react-router-dom' // useRouteMatch
 
-import { IQuestion, IComponentProps, initialQuestion } from '../types';
+import { IQuestion, ICategoriesProps, initialQuestion } from '../types';
 
 import { AutoSuggest } from '../../components/AutoSuggest';
 import ContainerQuestionForm from '../containers/ContainerQuestionForm'
@@ -16,7 +16,7 @@ type SupportParams = {
 	tekst: string;
 };
   
-const SupportPage: React.FC<IComponentProps> = (props: IComponentProps) => {
+const SupportPage: React.FC<ICategoriesProps> = (props: ICategoriesProps) => {
 	let { tekst } = useParams<SupportParams>();
 	const { categories, question, onSelectQuestion, add, canEdit } = props;
 	 

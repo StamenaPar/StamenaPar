@@ -34,7 +34,7 @@ interface IProps {
 
 
 // Generate the store
-// localStorage.clear(); // !!!!!!!!!!!!
+localStorage.clear(); // !!!!!!!!!!!!
 
 const store = configureStore();
 store.dispatch(loadCategories());

@@ -17,7 +17,7 @@ export function OptionName<T extends OptionValue>(props: Props<T>) {
         <span>
             {option
                 ? option!.label
-                : "Unkonwn"
+                : "Unknown"
             }
         </span>
     );

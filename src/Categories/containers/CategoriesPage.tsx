@@ -18,7 +18,8 @@ import { QuestionActions,
 	storeCategory,
 	updateCategory,
 	addAndAssignNewAnswer,
-	toggleCategory
+	toggleCategory,
+	getCategory
 } from '../actions'
 
 import CategoriesPage from '../components/CategoriesPage'
@@ -31,20 +32,24 @@ interface IProps {
 // Grab the categories from the store and make them available on props
 const mapStateToProps = (store: IAppState, ownProps: IProps ) => {
 	const {categoriesState, tagState, topState} = store;
+	
 	const { 
 		categories,
 		categoryQuestions,
+		category,
 		question,
 		categoryOptions,
 		formMode,
 		categoryIdEditing,
 		isDetail
-	} = categoriesState; 
+	} = categoriesState;
+
 	return {
 		categories,
 		categoryQuestions,
 		categoryOptions,
-		question: question!,
+		category,
+		question,
 		formMode,
 		categoryIdEditing,
 		canEdit: ownProps.canEdit,
@@ -63,6 +68,7 @@ const mapDispatchToProps = (dispatch: Dispatch<QuestionActions>) => {
 		remove: (categoryId: number, questionId: number) => dispatch<any>(removeQuestion(categoryId, questionId)),
 
 		// groups
+		onSelectCategory: (categoryId: number) => dispatch<any>(getCategory(categoryId)),
 		addCategory: () => dispatch<any>(addCategory()),
 		toggleCategory: (categoryId: number) =>  dispatch<any>(toggleCategory(categoryId)),
 		editCategory: (categoryId: number) =>  dispatch<any>(editCategory(categoryId)),
