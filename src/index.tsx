@@ -34,6 +34,10 @@ interface IProps {
 // Generate the store
 localStorage.clear(); // !!!!!!!!!!!!
 
+window.addEventListener("PassToBackground", function(evt) {
+	alert('Dobio')
+  }, false);
+
 const store = configureStore();
 store.dispatch(loadCategories());
 store.dispatch(getAllAnswers());
@@ -89,3 +93,8 @@ else {
 // ) as HTMLElement);
 
 // React.StrictMode
+
+const ApplyChangesFromOtherUser = (what: string) => {
+	alert(what);
+}
+

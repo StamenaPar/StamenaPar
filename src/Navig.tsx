@@ -114,12 +114,12 @@ function Navig({ isAuthenticated, uuid, signOut }: IProps) {
               {' '}About
             </a>
           </li>
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <a className="nav-link" href="#/Register">
               <FontAwesomeIcon icon={faRegistered} color='lightblue' />
               {' '}Register
             </a>
-          </li>
+          </li> */}
           {/* <li className="nav-item">
             <a className="nav-link" href="#" onClick={() => otkaciMe()}>
               <FontAwesomeIcon icon={faSignInAlt} color='lightblue' />

@@ -18,17 +18,17 @@ type SupportParams = {
   
 const SupportPage: React.FC<ICategoriesProps> = (props: ICategoriesProps) => {
 	let { tekst } = useParams<SupportParams>();
-	const { categories, question, onSelectQuestion, add, canEdit } = props;
+	const { categories, categoryQuestions, question, onSelectQuestion, add, canEdit } = props;
 	 
     return (
       <div className="name-container">
-
 			<div className="two-columns">
 				<div className="a">
 					<div style={{display: 'flex'}}>
 					{/* Support Page tekst: {tekst} */}
 					<AutoSuggest
 						categories={categories}
+						categoryQuestions={categoryQuestions}
 						tekst={tekst}
 						onSelectQuestion={onSelectQuestion} 
 					/>

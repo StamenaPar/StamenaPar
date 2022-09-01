@@ -290,6 +290,25 @@ export const getQuestion: ActionCreator<
 	};
 };
 
+interface IMsg {
+	ttype: string,
+	data: object
+}
+
+// https://stackoverflow.com/questions/64507379/send-message-from-web-page-to-chrome-extension
+const sendMessagesToWindow = (msg: IMsg, callback = null) => {
+	const { ttype, data } = msg;
+
+	// Can not pass the function with window.postMessage. Only JSON object can be passed.
+	window.postMessage(msg, document.location.origin);
+
+	switch (ttype) {
+		default:
+			break;
+	}
+
+};
+
 
 
 export const addQuestion: ActionCreator<
@@ -303,7 +322,8 @@ export const addQuestion: ActionCreator<
 				categoryId,
 				text
 			});
-		} catch (err) {
+		} 
+		catch (err) {
 			console.error(err);
 		}
 	};
@@ -446,6 +466,7 @@ export const setIsDetail: ActionCreator<
 };
 
 
+
 export const storeQuestion: ActionCreator<
 	ThunkAction<Promise<any>, IAppState, null, IStore>
 > = (question: IQuestion) => {
@@ -466,6 +487,12 @@ export const storeQuestion: ActionCreator<
 					question
 				});
 			}
+			const btnSync = document.getElementById('btnSync');
+			localStorage.setItem('syncAction', JSON.stringify({
+				type: QuestionActionTypes.STORE_QUESTION,
+				entity: question
+			}));
+			btnSync!.click();
 		}
 		catch (err) {
 			console.error(err);

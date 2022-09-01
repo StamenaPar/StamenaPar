@@ -64,6 +64,7 @@ const App = ({ navbarOpen, isAuthenticated, uuid, auth, toggleNavbar, checkAuthe
 		
 	}
 
+	
 	// null is the third state false/true/null in reducer
 	const app = //isAuthenticated !== null ? (  
 		<Router>
@@ -118,7 +119,7 @@ const App = ({ navbarOpen, isAuthenticated, uuid, auth, toggleNavbar, checkAuthe
 								<Route path="/register" element={
 									<LoginForm canEdit={true} isRegister={true} />
 								} />
-								<Route path="/supporter/:tekst?" element={<Support />} />
+								<Route path="/supporter/:tekst" element={<Support />} />
 								<Route path="/questions" element={<containers.categories canEdit={true} />} />
 								<Route path="/answers/:slug" element={<AnswersPage />} />
 								<Route path="/users/:slug" element={<UsersPage canEdit={true} />} />
@@ -153,7 +154,7 @@ const mapStateToProps = (store: IAppState) => ({
 const mapDispatchToProps = (dispatch: Dispatch<TopActions>) => {
 	return {
 		toggleNavbar: () => dispatch<any>(navbarToggle()),
-		checkAuthentication: (login: ILogin) => dispatch<any>(authenticate(login)),
+		checkAuthentication: async(login: ILogin) => await dispatch<any>(authenticate(login)),
 		signOut: () => dispatch<any>(unAuthenticate())
 	}
 };

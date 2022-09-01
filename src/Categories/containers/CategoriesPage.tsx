@@ -63,7 +63,9 @@ const mapStateToProps = (store: IAppState, ownProps: IProps ) => {
 const mapDispatchToProps = (dispatch: Dispatch<QuestionActions>) => {
 	return {
 		onSelectQuestion: (categoryId: number, questionId: number) => dispatch<any>(getQuestion(categoryId, questionId)),
-		add: (categoryId: number, text: string, canEdit?: boolean) => dispatch<any>(addQuestion(categoryId, text, canEdit)),
+		add: (categoryId: number, text: string, canEdit?: boolean) => {
+			dispatch<any>(addQuestion(categoryId, text, canEdit))
+		},
 		edit: (categoryId: number, questionId: number) => dispatch<any>(editQuestion(categoryId, questionId)),
 		remove: (categoryId: number, questionId: number) => dispatch<any>(removeQuestion(categoryId, questionId)),
 

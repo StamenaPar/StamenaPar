@@ -6,7 +6,7 @@ import AutosuggestHighlightMatch from "autosuggest-highlight/match";
 import AutosuggestHighlightParse from "autosuggest-highlight/parse";
 
 
-import { IQuestion, ICategory } from '../Categories/types'
+import { IQuestion, ICategory, ICategoryState } from '../Categories/types'
 import './AutoSuggest.css'
 
 
@@ -23,6 +23,7 @@ const QuestionAutosuggestMulti = Autosuggest as { new(): Autosuggest<IQuestion, 
 
 export class AutoSuggest extends React.Component<{ 
 	categories: ICategory[], 
+	categoryQuestions: Map<number, ICategoryState>,
 	tekst: string|undefined, 
 	onSelectQuestion: (categoryId: number, questionId: number) => void }, any> {
 	// region Fields
@@ -199,13 +200,13 @@ export class AutoSuggest extends React.Component<{
 		// 			};
 		// 		})
 		// 		.filter(section => section.questions.length > 0);
-
-		return this.props.categories
+        const {categories, categoryQuestions} = this.props;
+		return categories
 			.map(group => {
 				return {
 					...group,
-					questions: group
-						.questions
+					questions: //.group.questions
+					categoryQuestions.get(group.categoryId)!.questions
 						.filter(question => this.anyWord(valueWordRegex, question.words!))
 				};
 			})

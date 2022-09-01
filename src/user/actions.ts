@@ -13,6 +13,7 @@ import { SUPPORT_USERS } from './reducer';
 
 import data from "./data.json"
 import { IAppState } from '../store/Store';
+import { TopActionTypes } from '../Top/actions';
 
 const parseFromJson = (): IRole[] => {
 	return data.map(g => {
@@ -292,7 +293,7 @@ export const storeUser: ActionCreator<
 	return async (dispatch: Dispatch, getState: () => IAppState) => {
 		try {
 			if (formMode === 'add') {
-				await delay();
+				await delay(); 
 
 				// if userId == -1 nadji max
 				// return dispatch<any>(addUser(xxx))
@@ -304,6 +305,11 @@ export const storeUser: ActionCreator<
 					type: UserActionTypes.STORE_USER,
 					user,
 					formMode
+				});
+				// dodao na Zlataru
+				dispatch({
+					type: TopActionTypes.AUTHENTICATE,
+					user
 				});
 				return user;
 			}

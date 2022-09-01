@@ -58,6 +58,7 @@ const Page: React.FC<ICategoriesProps> = (props: ICategoriesProps) => {
 						<div style={{ border: '0px solid silver', backgroundColor: 'white' }}>
 							<AutoSuggest
 								categories={categories}
+								categoryQuestions={categoryQuestions}
 								tekst={tekst}
 								onSelectQuestion={onSelectQuestion}
 							/>
