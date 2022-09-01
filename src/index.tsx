@@ -37,6 +37,7 @@ localStorage.clear(); // !!!!!!!!!!!!
 window.addEventListener("PassToBackground", function(evt) {
 	alert('Dobio')
   }, false);
+  alert('gh-pages rade!!!!')
 
 const store = configureStore();
 store.dispatch(loadCategories());
