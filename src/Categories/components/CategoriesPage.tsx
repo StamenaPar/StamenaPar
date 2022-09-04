@@ -24,6 +24,7 @@ type SupportParams = {
 const Page: React.FC<ICategoriesProps> = (props: ICategoriesProps) => {
 
 	let { tekst } = useParams<SupportParams>();
+	
 	// const { categories, categoryQuestions, category, question,
 	// 	formMode, categoryIdEditing, onSelectQuestion, add, edit, remove, canEdit,
 	// 	addCategory, toggleCategory, editCategory, removeCategory, storeCategory, updateCategory,

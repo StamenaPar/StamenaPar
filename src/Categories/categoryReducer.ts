@@ -81,6 +81,7 @@ const myReducer: Reducer<ICategoryState, QuestionActions> = (
 
 		case QuestionActionTypes.STORE_QUESTION: {
 			const { question } = action;
+			question.words = question.text.split(' ');
 			const { questionId } = question;
 			return {
 				...state,

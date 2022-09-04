@@ -24,6 +24,8 @@ import { loadTop } from './Top/actions';
 import { IUser } from './user/types';
 import App from './App';
 import { coolColors } from './cool-colors';
+import { storeQuestion } from './Categories/actions'
+import { IQuestion } from './Categories/types';
 
 interface IProps {
 	store: Store<IAppState>;
@@ -34,17 +36,46 @@ interface IProps {
 // Generate the store
 localStorage.clear(); // !!!!!!!!!!!!
 
-window.addEventListener("PassToBackground", function(evt) {
-	alert('Dobio')
-  }, false);
-  alert('gh-pages rade!!!!')
+interface IEvt {
+	type: string;
+	entity: IQuestion;
+}
+
 
 const store = configureStore();
 store.dispatch(loadCategories());
 store.dispatch(getAllAnswers());
 store.dispatch(getAllUsers())
-store.dispatch(loadTop())
-store.dispatch(getAllTags())
+store.dispatch(loadTop());
+store.dispatch(getAllTags());
+
+alert('gh-pages rade!!!!')
+
+window.addEventListener("PassToBackground", function (evt: any) {
+	alert('Dobio')
+	const { detail } = evt;
+	/*
+	entity:
+		answers: []
+		categoryId: 22
+		created: "2022-09-02T09:49:26.408Z"
+		createdBy: 101
+		questionId: 1006
+		source: 0
+		status: 0
+		text: "slatko"
+	type: "STORE_QUESTION"
+	*/
+	switch (detail.type) {
+		case "STORE_QUESTION":
+			store.dispatch(storeQuestion(detail.entity));
+			break;
+		default:
+			break;
+	}
+
+}, false);
+
 
 const userIdOwner = 101;
 const state = store.getState();

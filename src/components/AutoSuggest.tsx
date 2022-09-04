@@ -49,7 +49,7 @@ export class AutoSuggest extends React.Component<{
 				inputAutosuggest!.current!.focus();
 			}, 500)
 
-		}, 100)
+		}, 500)
 
 		// console.log('componentDidMount', document)
 		// console.log(document?.getElementById('inputAutoSuggest'))
@@ -203,11 +203,12 @@ export class AutoSuggest extends React.Component<{
         const {categories, categoryQuestions} = this.props;
 		return categories
 			.map(group => {
+				console.log('dragica', group.categoryId, categoryQuestions.get(group.categoryId)!.questions)
 				return {
 					...group,
 					questions: //.group.questions
-					categoryQuestions.get(group.categoryId)!.questions
-						.filter(question => this.anyWord(valueWordRegex, question.words!))
+						categoryQuestions.get(group.categoryId)!.questions
+							.filter(question => this.anyWord(valueWordRegex, question.words!))
 				};
 			})
 			.filter(section => section.questions.length > 0);

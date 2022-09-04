@@ -19,7 +19,7 @@ type SupportParams = {
 const SupportPage: React.FC<ICategoriesProps> = (props: ICategoriesProps) => {
 	let { tekst } = useParams<SupportParams>();
 	const { categories, categoryQuestions, question, onSelectQuestion, add, canEdit } = props;
-	 
+	console.log('tekst:', tekst)
     return (
       <div className="name-container">
 			<div className="two-columns">
