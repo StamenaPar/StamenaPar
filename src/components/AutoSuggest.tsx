@@ -49,7 +49,7 @@ export class AutoSuggest extends React.Component<{
 				inputAutosuggest!.current!.focus();
 			}, 500)
 
-		}, 500)
+		}, 100)
 
 		// console.log('componentDidMount', document)
 		// console.log(document?.getElementById('inputAutoSuggest'))

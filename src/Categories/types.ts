@@ -25,7 +25,8 @@ export interface IQuestion {
 	source: number,
 	status: number,
 	createdBy: number,
-	created: Date
+	created: Date,
+	categoryIdWas?: number
 }
 
 export interface IQuestionJson extends Omit<IQuestion, 'categoryId' | 'answers' | 'created'> {

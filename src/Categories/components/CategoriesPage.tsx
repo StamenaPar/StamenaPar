@@ -12,7 +12,6 @@ import { useParams } from 'react-router-dom' // useRouteMatch
 import { DetailView } from './DetailView';
 
 import { COLORS } from '../../formik/theme';
-import { updateCategory } from '../actions';
 import { Col, Collapse, Container, Row } from 'react-bootstrap';
 import CategoryList from './CategoryList';
 const color = 'blue';

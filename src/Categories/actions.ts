@@ -234,7 +234,7 @@ export const loadCategories: ActionCreator<
 					loadedFromStorage = true;
 				}
 			}
-			
+
 			if (!loadedFromStorage) {
 				// load from data
 				categories = parseFromJson();
@@ -246,7 +246,7 @@ export const loadCategories: ActionCreator<
 					localStorage.setItem(`CATEGORY_${category.categoryId}`, JSON.stringify(category.questions));
 				}
 			}
-			
+
 			const categoryQuestions = new Map<number, ICategoryState>();
 			for (let category of categories) {
 				const categoryState: ICategoryState = {
@@ -255,11 +255,11 @@ export const loadCategories: ActionCreator<
 				categoryQuestions.set(category.categoryId, categoryState);
 				category.questions = [];
 			}
-			
+
 			if (!loadedFromStorage) {
 				localStorage.setItem(SUPPORT_CATEGORIES, JSON.stringify(categories));
 			}
-			
+
 			dispatch({
 				type: QuestionActionTypes.LOAD_CATEGORIES,
 				categories,
@@ -295,20 +295,6 @@ interface IMsg {
 	data: object
 }
 
-// https://stackoverflow.com/questions/64507379/send-message-from-web-page-to-chrome-extension
-const sendMessagesToWindow = (msg: IMsg, callback = null) => {
-	const { ttype, data } = msg;
-
-	// Can not pass the function with window.postMessage. Only JSON object can be passed.
-	window.postMessage(msg, document.location.origin);
-
-	switch (ttype) {
-		default:
-			break;
-	}
-
-};
-
 
 
 export const addQuestion: ActionCreator<
@@ -322,7 +308,7 @@ export const addQuestion: ActionCreator<
 				categoryId,
 				text
 			});
-		} 
+		}
 		catch (err) {
 			console.error(err);
 		}
@@ -347,7 +333,7 @@ export const editQuestion: ActionCreator<
 
 export const removeQuestion: ActionCreator<
 	ThunkAction<Promise<any>, ICategoriesState, null, IRemove>
-> = (categoryId: number, questionId: number) => {
+> = (doSync: boolean, categoryId: number, questionId: number) => {
 	return async (dispatch: Dispatch) => {
 		try {
 			await delay()
@@ -357,6 +343,8 @@ export const removeQuestion: ActionCreator<
 				categoryId,
 				questionId
 			});
+			if (doSync)
+				syncWithOthers(QuestionActionTypes.REMOVE_QUESTION, {categoryId, questionId});
 		} catch (err) {
 			console.error(err);
 		}
@@ -465,11 +453,20 @@ export const setIsDetail: ActionCreator<
 	};
 };
 
-
+const syncWithOthers = (type: string, entity: any) => {
+	const btnSync = document.getElementById('btnSync');
+	localStorage.setItem('syncAction', JSON.stringify({
+			type,
+			entity,
+			sessionId: sessionStorage.getItem('sessionId')
+		})
+	);
+	btnSync!.click();
+};
 
 export const storeQuestion: ActionCreator<
 	ThunkAction<Promise<any>, IAppState, null, IStore>
-> = (question: IQuestion) => {
+> = (doSync: boolean, question: IQuestion) => {
 	return async (dispatch: Dispatch, getState: () => IAppState) => {
 		const { categoryId } = question;
 		try {
@@ -487,12 +484,8 @@ export const storeQuestion: ActionCreator<
 					question
 				});
 			}
-			const btnSync = document.getElementById('btnSync');
-			localStorage.setItem('syncAction', JSON.stringify({
-				type: QuestionActionTypes.STORE_QUESTION,
-				entity: question
-			}));
-			btnSync!.click();
+			if (doSync)
+				syncWithOthers(QuestionActionTypes.STORE_QUESTION, question);
 		}
 		catch (err) {
 			console.error(err);
@@ -517,7 +510,7 @@ const addCategoryUnknown = async (state: IAppState, dispatch: Dispatch) => {
 
 export const updateQuestion: ActionCreator<
 	ThunkAction<Promise<any>, IAppState, null, IUpdate>
-> = (question: IQuestion) => {
+> = (doSync: boolean, question: IQuestion) => {
 	return async (dispatch: Dispatch, getState: () => IAppState) => {
 		try {
 			const { categoryId } = question;
@@ -534,6 +527,10 @@ export const updateQuestion: ActionCreator<
 					type: QuestionActionTypes.UPDATE_QUESTION,
 					question
 				});
+			}
+			if (doSync) {
+				question.categoryIdWas = getState().categoriesState.questionCopy!.categoryId;
+				syncWithOthers(QuestionActionTypes.UPDATE_QUESTION, question);
 			}
 		}
 		catch (err) {
@@ -628,11 +625,11 @@ export const editCategory: ActionCreator<
 			console.error(err);
 		}
 	};
-};
+}
 
 export const removeCategory: ActionCreator<
 	ThunkAction<Promise<any>, ICategoriesState, null, IRemoveCategory>
-> = (categoryId: number) => {
+> = (doSync: boolean, categoryId: number) => {
 	return async (dispatch: Dispatch) => {
 		try {
 			await delay()
@@ -641,6 +638,8 @@ export const removeCategory: ActionCreator<
 				type: QuestionActionTypes.REMOVE_CATEGORY,
 				categoryId
 			});
+			if (doSync)
+				syncWithOthers(QuestionActionTypes.REMOVE_CATEGORY, categoryId);
 		} catch (err) {
 			console.error(err);
 		}
@@ -649,7 +648,7 @@ export const removeCategory: ActionCreator<
 
 export const storeCategory: ActionCreator<
 	ThunkAction<Promise<any>, IAppState, null, IStoreCategory>
-> = (category: ICategory) => {
+> = (doSync: boolean, category: ICategory) => {
 	return async (dispatch: Dispatch, getState: () => IAppState) => {
 		try {
 			// await updateCategoryFromLocalStorage(group);
@@ -657,6 +656,8 @@ export const storeCategory: ActionCreator<
 				type: QuestionActionTypes.STORE_CATEGORY,
 				category
 			});
+			if (doSync)
+				syncWithOthers(QuestionActionTypes.STORE_CATEGORY, category);
 			return Promise.resolve(category.categoryId) //getState().categoriesState.categories.length)
 		}
 		catch (err) {
@@ -668,7 +669,7 @@ export const storeCategory: ActionCreator<
 
 export const updateCategory: ActionCreator<
 	ThunkAction<Promise<any>, ICategoriesState, null, IStoreCategory>
-> = (category: ICategory) => {
+> = (doSync: boolean, category: ICategory) => {
 	return async (dispatch: Dispatch) => {
 		try {
 			// await updateCategoryFromLocalStorage(group);
@@ -676,6 +677,8 @@ export const updateCategory: ActionCreator<
 				type: QuestionActionTypes.UPDATE_CATEGORY,
 				category
 			});
+			if (doSync)
+				syncWithOthers(QuestionActionTypes.UPDATE_CATEGORY, category);
 		} catch (err) {
 			console.error(err);
 		}

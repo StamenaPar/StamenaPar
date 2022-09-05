@@ -8,7 +8,10 @@ import { Provider } from 'react-redux';
 import { Store } from 'redux';
 
 import configureStore, { IAppState } from './store/Store';
-import { loadCategories } from './Categories/actions';
+import { loadCategories, 
+	removeCategory, storeCategory, updateCategory,
+	removeQuestion, storeQuestion, editQuestion, updateQuestion 
+} from './Categories/actions';
 import { getAllAnswers } from './Answers/actions';
 
 import 'bootstrap/dist/css/bootstrap.css'
@@ -24,7 +27,6 @@ import { loadTop } from './Top/actions';
 import { IUser } from './user/types';
 import App from './App';
 import { coolColors } from './cool-colors';
-import { storeQuestion } from './Categories/actions'
 import { IQuestion } from './Categories/types';
 
 interface IProps {
@@ -49,29 +51,49 @@ store.dispatch(getAllUsers())
 store.dispatch(loadTop());
 store.dispatch(getAllTags());
 
-alert('gh-pages rade!!!!')
+const sessionId = Math.floor((Math.random() * 10000) + 1);
+sessionStorage.setItem('sessionId', sessionId.toString())
 
 window.addEventListener("PassToBackground", function (evt: any) {
-	alert('Dobio')
+	// alert('Dobio')
 	const { detail } = evt;
-	/*
-	entity:
-		answers: []
-		categoryId: 22
-		created: "2022-09-02T09:49:26.408Z"
-		createdBy: 101
-		questionId: 1006
-		source: 0
-		status: 0
-		text: "slatko"
-	type: "STORE_QUESTION"
-	*/
-	switch (detail.type) {
-		case "STORE_QUESTION":
-			store.dispatch(storeQuestion(detail.entity));
-			break;
-		default:
-			break;
+	const sessionId = sessionStorage.getItem('sessionId');
+	console.log('Session breeeeeee:', sessionId, ' detail:', detail)
+	if (sessionId !== detail.sessionId) {
+		switch (detail.type) {
+			case "STORE_CATEGORY":
+				detail.entity.created = new Date(detail.entity.created);
+				store.dispatch(storeCategory(false, detail.entity));
+				break;
+			case "UPDATE_CATEGORY":
+				detail.entity.created = new Date(detail.entity.created);
+				store.dispatch(updateCategory(false, detail.entity));
+				break;
+			case "REMOVE_CATEGORY":
+				store.dispatch(removeCategory(false, detail.entity));
+				break;
+			case "STORE_QUESTION":
+				detail.entity.created = new Date(detail.entity.created);
+				store.dispatch(storeQuestion(false, detail.entity));
+				break;
+			case "UPDATE_QUESTION": {
+					const question = detail.entity;
+					question.created = new Date(question.created);
+					for (let i=0; i < question.answers.length; i++) {
+						const a = question.answers[i];
+						a.assigned = new Date(a.assigned);
+					}
+					store.dispatch(updateQuestion(false, question));
+				}
+				break;			
+			case "REMOVE_Question": {
+					const { categoryId, questionId } = detail.entity
+					store.dispatch(removeQuestion(false, categoryId, questionId));
+				}
+				break;
+			default:
+				break;
+		}
 	}
 
 }, false);
@@ -125,8 +147,4 @@ else {
 // ) as HTMLElement);
 
 // React.StrictMode
-
-const ApplyChangesFromOtherUser = (what: string) => {
-	alert(what);
-}
 

@@ -146,8 +146,8 @@ const myReducer: Reducer<ICategoriesState, QuestionActions> = (
 
 		case QuestionActionTypes.UPDATE_QUESTION: {
 			let { questionCopy } = state;
-			const { categoryId, questionId } = action.question;
-			const categoryIdCopy = questionCopy!.categoryId;
+			const { categoryId, questionId, categoryIdWas } = action.question; // comes from other user update
+			const categoryIdCopy = categoryIdWas ? categoryIdWas : questionCopy!.categoryId;
 			if (action.question.categoryId === categoryIdCopy) {
 				// category hasn't been changed
 				const { categoryQuestions, question } = reduceQuestions(state.categoryQuestions, action, categoryId, questionId);

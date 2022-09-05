@@ -62,9 +62,9 @@ const mapDispatchToProps = (dispatch: Dispatch<QuestionActions>) => {
 		onSelectQuestion: (categoryId: number, questionId: number) => dispatch<any>(getQuestion(categoryId, questionId)),
 		add: (categoryId: number, text: string, canEdit?: boolean) => dispatch<any>(addQuestion(categoryId, text, canEdit)),
 		edit: (categoryId: number, questionId: number) => dispatch<any>(editQuestion(categoryId, questionId)),
-		remove: (categoryId: number, questionId: number) => dispatch<any>(removeQuestion(categoryId, questionId)),
+		remove: (categoryId: number, questionId: number) => dispatch<any>(removeQuestion(true, categoryId, questionId)),
 		saveForm: (question: IQuestion, formMode: string) => 
-			dispatch<any>(formMode==='add'?storeQuestion(question):updateQuestion(question)),
+			dispatch<any>(formMode==='add'?storeQuestion(true, question):updateQuestion(true, question)),
 		cancel: () => dispatch<any>(cancelQuestion()),
 
 		// question answers
