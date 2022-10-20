@@ -2,6 +2,12 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Demo app using React and Redux-Thunk
+User can create its Knowledge Database, to support the clients.
+When you record your experiences and insights, other members of your team can share info.
+You can fill you database with Questions and Answers from email header which is forwarded to App by Chrome Extension.
+Questions and Answers are stored by 'localStorage' avoiding public publishing.
+
 ## Available Scripts
 
 In the project directory, you can run:

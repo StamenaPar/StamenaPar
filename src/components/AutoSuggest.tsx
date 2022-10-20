@@ -203,7 +203,7 @@ export class AutoSuggest extends React.Component<{
         const {categories, categoryQuestions} = this.props;
 		return categories
 			.map(group => {
-				console.log('dragica', group.categoryId, categoryQuestions.get(group.categoryId)!.questions)
+				console.log('categoryId:', group.categoryId, categoryQuestions.get(group.categoryId)!.questions)
 				return {
 					...group,
 					questions: //.group.questions
