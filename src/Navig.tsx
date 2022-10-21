@@ -67,7 +67,7 @@ function Navig({ isAuthenticated, uuid, signOut }: IProps) {
               </a>
             </li> */}
           </ul>
-
+            {/*
           <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
             <span>Saved reports</span>
             <a className="link-secondary" href="#" aria-label="Add a new report">
@@ -98,7 +98,7 @@ function Navig({ isAuthenticated, uuid, signOut }: IProps) {
               {' '}Year-end sale
               </a>
             </li>
-          </ul>
+          </ul> */}
         </>
       ) : (
         <ul className="nav flex-column">
