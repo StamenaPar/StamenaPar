@@ -78,7 +78,7 @@ export class AutoSuggest extends React.Component<{
 			inputProps={{
 				placeholder: `Type 'promocode'`,
 				value,
-				onChange: (e, changeEvent) => this.onChange(e, changeEvent)
+				onChange: (e, changeEvent) => this.onChange(e, changeEvent),
 			}}
 
 		/>;

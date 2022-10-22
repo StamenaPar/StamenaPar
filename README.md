@@ -3,10 +3,18 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Demo app using React and Redux-Thunk
+Many (software) companies don't use some kind of Support app for its clients. 
+That's why I created this demo Web App.
 User can create its Knowledge Database, to support the clients.
 When you record your experiences and insights, other members of your team can share info.
-You can fill you database with Questions and Answers from email header which is forwarded to App by Chrome Extension.
+You can fill you database with Questions and Answers manually, 
+
+
+## Chrome Extension
+I created Chrome Extension which can treat email header as the Question 
+and forward it to the Support Web App.
 Questions and Answers are stored by 'localStorage' avoiding public publishing.
+'localStorages' of all the users can be synchronized to Common Storage using Web Sockets.
 
 ## Available Scripts
 

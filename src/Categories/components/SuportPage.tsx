@@ -15,36 +15,36 @@ const color = 'blue';
 type SupportParams = {
 	tekst: string;
 };
-  
+
 const SupportPage: React.FC<ICategoriesProps> = (props: ICategoriesProps) => {
 	let { tekst } = useParams<SupportParams>();
 	const { categories, categoryQuestions, question, onSelectQuestion, add, canEdit } = props;
 	console.log('tekst:', tekst)
-    return (
-      <div className="name-container">
+	return (
+		<div className="name-container">
 			<div className="two-columns">
 				<div className="a">
-					<div style={{display: 'flex'}}>
-					{/* Support Page tekst: {tekst} */}
-					<AutoSuggest
-						categories={categories}
-						categoryQuestions={categoryQuestions}
-						tekst={tekst}
-						onSelectQuestion={onSelectQuestion} 
-					/>
-					<button 
-						className="button-edit"
-						title="Create a new Question"
-						onClick={() => { add(0, tekst??'');	}
-					}>
-						<FontAwesomeIcon icon={faPlus} color='lightblue' />
-					</button>
+					<div style={{ display: 'flex' }}>
+						{/* Support Page tekst: {tekst} */}
+						<AutoSuggest
+							categories={categories}
+							categoryQuestions={categoryQuestions}
+							tekst={tekst}
+							onSelectQuestion={onSelectQuestion}
+						/>
+						<button
+							className="button-edit"
+							title="Create a new Question"
+							onClick={() => { add(0, tekst ?? ''); }
+							}>
+							<FontAwesomeIcon icon={faPlus} color='lightblue' />
+						</button>
 					</div>
 				</div>
 				<div className="b">
 					{categories && question &&
-						<div style={{border: '1px solid silver', borderRadius: '5px', padding: '5px 5px 15px 5px', background: COLORS[color][5]}}>
-							<h4 style={{marginTop: 0, color: 'white'}}>Question</h4>
+						<div style={{ border: '1px solid silver', borderRadius: '5px', padding: '5px 5px 15px 5px', background: COLORS[color][5] }}>
+							<h4 style={{ marginTop: 0, color: 'white' }}>Question</h4>
 							<ContainerQuestionForm canEdit={canEdit} />
 							{/* <QuestionForm 
 								question={question}
@@ -67,10 +67,10 @@ const SupportPage: React.FC<ICategoriesProps> = (props: ICategoriesProps) => {
 					}
 				</div>
 			</div>
-			
-      </div>
-    );
-  }
+
+		</div>
+	);
+}
 
 export default SupportPage
 
